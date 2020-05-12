@@ -92,12 +92,15 @@ class VerifyService extends Service {
 
   }
 
-  // 查询审核申请 审核get
+  /**
+   * 查询审核申请列表 审核get
+   * @param {JSON} options 用来过滤列表的参数
+   *  */
   async queryAdjust(options) {
     const Adjust = await this.ctx.model.Verify.Adjust;
 
     try {
-      const findResult = await Adjust.find(options);
+      const findResult = await Adjust.find(options).sort({ applyTime: -1 });
 
       // 判断是否有内容
       if (findResult.length !== 0) {
@@ -121,8 +124,15 @@ class VerifyService extends Service {
       };
     }
 
-
   }
+
+  /**
+   * 处理品类 提交的审核
+   */
+  // async verifyCategory() {
+
+  // }
+
 }
 
 module.exports = VerifyService;
