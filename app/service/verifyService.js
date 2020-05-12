@@ -44,53 +44,52 @@ class VerifyService extends Service {
    * 审核状态码：0为审核中，1为审核的结果为通过，2为审核未通过，默认为0
    * 审核操作：0为审核失败，1为审核成功
    */
-  async verifyCategory() {
+  // async verifyCategory() {
 
-    // 获取前端审核结果
-    const AskCategory = await this.ctx.request.body;
-    const result = AskCategory.Ask;
-    const Category = this.ctx.model.Category;
+  //   // 获取前端审核结果
+  //   const AskCategory = await this.ctx.request.body;
+  //   const result = AskCategory.Ask;
+  //   const Category = this.ctx.model.Category;
 
-    // 审核结果 通过
-    if (result === '1') {
+  //   // 审核结果 通过
+  //   if (result === '1') {
 
-      // 更新品类原表的信息为申请表中的信息
-      AskCategory.categoryState = result;
-      const updateInfo = await Category.update({ categoryName: AskCategory.categoryName }, AskCategory);
-      const find = await Category.find({ categoryName: AskCategory.categoryName });
-      console.log(updateInfo, find);
+  //     // 更新品类原表的信息为申请表中的信息
+  //     AskCategory.categoryState = result;
+  //     const updateInfo = await Category.update({ categoryName: AskCategory.categoryName }, AskCategory);
+  //     const find = await Category.find({ categoryName: AskCategory.categoryName });
+  //     console.log(updateInfo, find);
 
-      // 若没有变动，则显示更新失败
-      if (updateInfo.nModefied === 0) {
-        return {
-          verify: '0',
-          information: '数据库更新失败',
-        };
-      }
-      // 返回更新成功
-      return {
-        verify: '1',
-        information: '数据库更新成功',
-      };
+  //     // 若没有变动，则显示更新失败
+  //     if (updateInfo.nModefied === 0) {
+  //       return {
+  //         verify: '0',
+  //         information: '数据库更新失败',
+  //       };
+  //     }
+  //     // 返回更新成功
+  //     return {
+  //       verify: '1',
+  //       information: '数据库更新成功',
+  //     };
 
-      // 审核结果 未通过
-    } else if (result === '2') {
-      const updateInfo = await Category.updateOne({ categoryName: AskCategory.categoryName }, { categoryReason: AskCategory.categoryReason });
+  //     // 审核结果 未通过
+  //   } else if (result === '2') {
+  //     const updateInfo = await Category.updateOne({ categoryName: AskCategory.categoryName }, { categoryReason: AskCategory.categoryReason });
 
-      // 若没有变动，则显示更新失败
-      if (updateInfo.nModefied === 0) {
-        return {
-          verify: '0',
-        };
-      }
-      // 返回更新成功
-      return {
-        verify: '1',
-      };
-    }
+  //     // 若没有变动，则显示更新失败
+  //     if (updateInfo.nModefied === 0) {
+  //       return {
+  //         verify: '0',
+  //       };
+  //     }
+  //     // 返回更新成功
+  //     return {
+  //       verify: '1',
+  //     };
+  //   }
 
-
-  }
+  // }
 
   /**
    * 查询审核申请列表 审核get
@@ -128,7 +127,111 @@ class VerifyService extends Service {
 
   /**
    * 处理品类 提交的审核
+   * 主要改动有以下两点：首先，改变数据：改变审核状态，插入审核时间，审核人；做出申请动作，例如删除，修改
+   * 其次，发送运营商消息，通知运营商;
+   * 前端发送 申请id,
    */
+  async verifyCategory() {
+    const Staff = this.ctx.model.Staff;
+    const News = this.ctx.model.Verify.News;
+    const Category = this.ctx.model.Category;
+    const Adjust = this.ctx.model.Verify.Adjust;
+    const id = this.ctx.query._id; // 获取申请的id
+    const origin = await Adjust.findById(id); // 获取原始申请表里的申请记录
+    // console.log(origin);
+    const adjustInstance = await this.ctx.request.body; // 获取审核后完善的数据
+    try {
+      // 更新原有记录，插入审核时间，审核人，审核理由，审核结果，改变审核状态,已读状态
+      let changeAdjust = {};
+      const updateResult = await Adjust.updateOne({ _id: id }, adjustInstance);
+      console.log(updateResult);
+      if (updateResult.nModified === 0) {
+        changeAdjust = {
+          status: '0',
+          information: '申请表没有更新,审核失败',
+        };
+      } else {
+        changeAdjust = {
+          status: '1',
+          information: '申请表已更新,审核成功',
+        };
+      }
+      // 若更新成功，判断是否审核通过,并根据不同的结果进行不同的处理，1表示审核通过
+      let result; // 存放 操作结果
+      if (adjustInstance.auditStatus === '1') {
+
+        // 审核通过，执行申请的操作(但是没有catch 错误)
+        // eslint-disable-next-line no-unused-vars
+
+        switch (origin.action) {
+          case '0': {
+            result = await Category.create(origin.changedData);
+            break;
+          }
+          case '1': {
+            result = await Category.updateOne({ _id: origin.objectId }, origin.changedData);
+            break;
+          }
+          case '2': {
+            result = await Category.deleteOne({ _id: origin.objectId });
+            break;
+          }
+          case '3': {
+            result = await Category.updateOne({ _id: origin.objectId }, { categoryState: '1' }); // 上架
+            break;
+          }
+          case '4': {
+            result = await Category.updateOne({ _id: origin.objectId }, { categoryState: '0' }); // 下架
+            break;
+          }
+          default: {
+            result = null;
+            break;
+          }
+        }
+        console.log('做出的动作是什么呢？' + origin.action, result);
+
+      }
+
+      // 审核后发送的消息,并且附带相关的数据
+      const auditor = await Staff.findById(adjustInstance.auditorID, { name: 1 });
+      // console.log('name: ' + auditor.name);
+      const newsInstance = await News.create({
+        reason: adjustInstance.reason, // 审核 理由
+        auditorName: auditor.name, // 审核人姓名
+        auditTime: adjustInstance.auditTime, // 审核时间
+        result: adjustInstance.auditStatus, // 审核结果
+        timestamp: Date.now(), // 时间戳，
+        verifiedData: adjustInstance.changeData,
+      });
+
+      // 判断审核是否成功，若申请数据为空（前端判断）申请记录没有更新，申请操作没有执行，没有发送消息皆判定审核失败
+      if (changeAdjust.status === '1' || result || newsInstance) {
+        return {
+          status: '1',
+          information: '操作数据库成功,审核成功',
+          newsInstance, // 发送的消息
+          changeAdjust, // 更改申请表的结果
+        };
+      }
+
+      // 如果审核失败
+      return {
+        status: '0',
+        information: '操作数据库失败,审核失败',
+        newsInstance, // 发送的消息
+        changeAdjust, // 更改申请表的结果
+      };
+
+    } catch (err) {
+      console.log('/verifyservice/verifyCategory', err);
+      return {
+        status: '1',
+        information: '审核出错',
+        error: err.message,
+      };
+    }
+  }
 
 
 }

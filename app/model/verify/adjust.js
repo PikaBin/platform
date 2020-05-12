@@ -14,6 +14,7 @@ module.exports = app => {
     result: { type: String }, // 审核结果
     auditStatus: { type: String, required: true, default: '0' }, // 审核状态， 0：未审核，1：审核通过，2：审核不通过
     timestamp: { type: Number, default: Date.now() }, // 时间戳，
+    options: Schema.Types.Mixed, // 补充字段
     changedData: Schema.Types.Mixed, // 存放申请时传入的已改动数据
   });
 
