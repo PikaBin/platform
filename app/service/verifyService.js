@@ -129,9 +129,7 @@ class VerifyService extends Service {
   /**
    * 处理品类 提交的审核
    */
-  // async verifyCategory() {
 
-  // }
 
 }
 

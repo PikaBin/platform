@@ -7,8 +7,10 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
   // 注册，登录
-  router.post('/platform/signup', controller.login.signUp);
-  router.get('/platform/signin_test', controller.login.signIn_get); // 返回验证码图片
+
+  router.post('/platform/signup', controller.login.signUp);// 注册
+  router.get('/platform/signin', controller.login.signIn_get); // 返回验证码 代码
+  router.get('/platform/signin_test', controller.login.signIn_test); // 返回验证码图片
   router.post('/platform/signin', controller.login.signIn); // 处理登录
 
   /**
