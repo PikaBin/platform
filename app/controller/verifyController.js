@@ -13,8 +13,8 @@ class VerifyController extends Controller {
 
   // 平台审核
   async verifyCategory() {
-    const status = await this.ctx.service.verifyService.verifyCategory();
-    this.ctx.body = status;
+    const result = await this.ctx.service.verifyService.verifyCategory();
+    this.ctx.body = result;
   }
 
   // 返回审核列表
@@ -23,6 +23,7 @@ class VerifyController extends Controller {
     const result = await this.ctx.service.verifyService.queryAdjust(options);
     this.ctx.body = result;
   }
+
 }
 
 module.exports = VerifyController;

@@ -44,8 +44,6 @@ class LoginController extends Controller {
     this.ctx.body = captcha.data;
   }
 
-  // 登录 测试用
-
 
   // 登录 验证码，查询账户，密码
   async signIn() {
@@ -82,4 +80,5 @@ class LoginController extends Controller {
     }
   }
 }
+
 module.exports = LoginController;
