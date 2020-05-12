@@ -7,9 +7,14 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
   // 注册，登录
-  router.post('/operator/signup', controller.login.signUp);
-  router.get('/operator/signin', controller.login.signIn_get); // 返回验证码图片
-  router.post('/operator/signin', controller.login.signIn); // 处理登录
+  router.post('/platform/signup', controller.login.signUp);
+  router.get('/platform/signin_test', controller.login.signIn_get); // 返回验证码图片
+  router.post('/platform/signin', controller.login.signIn); // 处理登录
+
+  /**
+   * staff
+   */
+  router.post('/platform/addstaff', controller.staff.addStaff); // 新增平台员工
 
   // // 运营商基础信息管理
   // router.post('/manager/addoperator', controller.operatorInfo.addOperator);
