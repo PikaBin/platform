@@ -27,7 +27,7 @@ module.exports = app => {
     categoryMaxTaskTime: { type: Number, required: true },
     categoryMinPrice: { type: Number, required: true },
     categoryMaxPrice: { type: Number, required: true },
-    categoryExamineTF: { type: String, required: true },
+    categoryExamineTF: { type: String, required: true, default: '0' },
     categoryReason: { type: String },
     categoryAddTime: { type: Date, required: true },
     categoryUptime: { type: Date }, // 上架时间

@@ -171,6 +171,7 @@ class VerifyService extends Service {
           // }
           case '1': {
             result = await Category.updateOne({ _id: origin.objectId }, origin.changedData); // 修改
+            console.log('到底更新了什么：' + origin.changedData);
             await Category.updateOne({ _id: origin.objectId }, { categoryverifyTime: new Date() });
             break;
           }
@@ -228,7 +229,7 @@ class VerifyService extends Service {
     } catch (err) {
       console.log('/verifyservice/verifyCategory', err);
       return {
-        status: '1',
+        status: '0',
         information: '审核出错',
         error: err.message,
       };
