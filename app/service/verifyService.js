@@ -141,21 +141,7 @@ class VerifyService extends Service {
     // console.log(origin);
     const adjustInstance = await this.ctx.request.body; // 获取审核后完善的数据
     try {
-      // 更新原有记录，插入审核时间，审核人，审核理由，审核结果，改变审核状态,已读状态
-      let changeAdjust = {};
-      const updateResult = await Adjust.updateOne({ _id: id }, adjustInstance);
-      console.log(updateResult);
-      if (updateResult.nModified === 0) {
-        changeAdjust = {
-          status: '0',
-          information: '申请表没有更新,审核失败',
-        };
-      } else {
-        changeAdjust = {
-          status: '1',
-          information: '申请表已更新,审核成功',
-        };
-      }
+
       // 若更新成功，判断是否审核通过,并根据不同的结果进行不同的处理，1表示审核通过
       let result; // 存放 执行操作结果
       if (adjustInstance.auditStatus === '1') {
@@ -196,20 +182,40 @@ class VerifyService extends Service {
 
       }
 
-      // 审核后发送的消息,并且附带相关的数据
-      const auditor = await Staff.findById(adjustInstance.auditorID, { name: 1 });
-      // console.log('name: ' + auditor.name);
-      const newsInstance = await News.create({
-        reason: adjustInstance.reason, // 审核 理由
-        auditorName: auditor.name, // 审核人姓名
-        auditTime: adjustInstance.auditTime, // 审核时间
-        result: adjustInstance.auditStatus, // 审核结果
-        timestamp: Date.now(), // 时间戳，
-        verifiedData: origin.changedData, // 暂时用原始申请的附属数据替代，其实二者应该一致
-      });
 
-      // 判断审核是否成功，若申请数据为空（前端判断）申请记录没有更新，申请操作没有执行，没有发送消息皆判定审核失败
-      if (changeAdjust.status === '1' || result || newsInstance) {
+      // 判断执行条件
+      // 审核通过，操作也通过或者前端审核未通过，
+      if (result || adjustInstance.auditStatus === '2') {
+
+        // 更改申请表记录，插入审核人，审核时间，改变审核状态
+        let changeAdjust = {};
+        const updateResult = await Adjust.updateOne({ _id: id }, adjustInstance);
+        console.log(updateResult);
+        if (updateResult.nModified === 0) {
+          changeAdjust = {
+            status: '0',
+            information: '申请表没有更新,审核失败',
+          };
+        } else {
+          changeAdjust = {
+            status: '1',
+            information: '申请表已更新,审核成功',
+          };
+        }
+
+        // 发送运营商消息
+        const auditor = await Staff.findById(adjustInstance.auditorID, { name: 1 });
+        // console.log('name: ' + auditor.name);
+        const newsInstance = await News.create({
+          reason: adjustInstance.reason, // 审核 理由
+          auditorName: auditor.name, // 审核人姓名
+          auditTime: adjustInstance.auditTime, // 审核时间
+          result: adjustInstance.auditStatus, // 审核结果
+          timestamp: Date.now(), // 时间戳，
+          verifiedData: origin.changedData, // 暂时用原始申请的附属数据替代，其实二者应该一致
+        });
+
+        // 返回结果
         return {
           status: '1',
           information: '操作数据库成功,审核成功',
@@ -222,8 +228,6 @@ class VerifyService extends Service {
       return {
         status: '0',
         information: '操作数据库失败,审核失败',
-        newsInstance, // 发送的消息
-        changeAdjust, // 更改申请表的结果
       };
 
     } catch (err) {
