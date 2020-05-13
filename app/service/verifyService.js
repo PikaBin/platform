@@ -158,6 +158,8 @@ class VerifyService extends Service {
         const auditor = await Staff.findById(adjustInstance.auditorID, { name: 1 });
         // console.log('name: ' + auditor.name);
         const newsInstance = await News.create({
+          object: 'c',
+          action: origin.action,
           reason: adjustInstance.reason, // 审核 理由
           auditorName: auditor.name, // 审核人姓名
           auditTime: adjustInstance.auditTime, // 审核时间
