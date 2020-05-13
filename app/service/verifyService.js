@@ -164,16 +164,18 @@ class VerifyService extends Service {
         // eslint-disable-next-line no-unused-vars
 
         switch (origin.action) {
-          case '0': {
-            result = await Category.create(origin.changedData);
-            break;
-          }
+          // 品类新增不用审核
+          // case '0': {
+          //   result = await Category.create(origin.changedData);
+          //   break;
+          // }
           case '1': {
-            result = await Category.updateOne({ _id: origin.objectId }, origin.changedData);
+            result = await Category.updateOne({ _id: origin.objectId }, origin.changedData); // 修改
+            await Category.updateOne({ _id: origin.objectId }, { categoryverifyTime: new Date() });
             break;
           }
           case '2': {
-            result = await Category.deleteOne({ _id: origin.objectId });
+            result = await Category.deleteOne({ _id: origin.objectId }); // 删除
             break;
           }
           case '3': {
@@ -232,6 +234,10 @@ class VerifyService extends Service {
       };
     }
   }
+
+  /**
+   * 单品审核
+   */
 
 
 }

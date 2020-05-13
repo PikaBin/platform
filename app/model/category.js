@@ -30,14 +30,10 @@ module.exports = app => {
     categoryExamineTF: { type: String, required: true },
     categoryReason: { type: String },
     categoryAddTime: { type: Date, required: true },
+    categoryUptime: { type: Date }, // 上架时间
+    categoryOfftime: { type: Date }, // 下架时间
     categoryReviseTime: { type: Date },
-    categoryDeleteTime: { type: Date },
-    // interruptRequest: [ new Schema({
-    //   _id: Schema.Types.ObjectId,
-    //   stage: Array,
-    //   receivable: Number,
-    // }) ],
-    interruptRequest: Array,
+    categoryverifyTime: { type: Date }, // 审核时间
   });
 
   return mongoose.model('Category', categorySchema);
