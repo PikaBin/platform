@@ -44,52 +44,6 @@ class VerifyService extends Service {
    * 审核状态码：0为审核中，1为审核的结果为通过，2为审核未通过，默认为0
    * 审核操作：0为审核失败，1为审核成功
    */
-  // async verifyCategory() {
-
-  //   // 获取前端审核结果
-  //   const AskCategory = await this.ctx.request.body;
-  //   const result = AskCategory.Ask;
-  //   const Category = this.ctx.model.Category;
-
-  //   // 审核结果 通过
-  //   if (result === '1') {
-
-  //     // 更新品类原表的信息为申请表中的信息
-  //     AskCategory.categoryState = result;
-  //     const updateInfo = await Category.update({ categoryName: AskCategory.categoryName }, AskCategory);
-  //     const find = await Category.find({ categoryName: AskCategory.categoryName });
-  //     console.log(updateInfo, find);
-
-  //     // 若没有变动，则显示更新失败
-  //     if (updateInfo.nModefied === 0) {
-  //       return {
-  //         verify: '0',
-  //         information: '数据库更新失败',
-  //       };
-  //     }
-  //     // 返回更新成功
-  //     return {
-  //       verify: '1',
-  //       information: '数据库更新成功',
-  //     };
-
-  //     // 审核结果 未通过
-  //   } else if (result === '2') {
-  //     const updateInfo = await Category.updateOne({ categoryName: AskCategory.categoryName }, { categoryReason: AskCategory.categoryReason });
-
-  //     // 若没有变动，则显示更新失败
-  //     if (updateInfo.nModefied === 0) {
-  //       return {
-  //         verify: '0',
-  //       };
-  //     }
-  //     // 返回更新成功
-  //     return {
-  //       verify: '1',
-  //     };
-  //   }
-
-  // }
 
   /**
    * 查询审核申请列表 审核get
@@ -137,6 +91,7 @@ class VerifyService extends Service {
     const Category = this.ctx.model.Category;
     const Adjust = this.ctx.model.Verify.Adjust;
     const id = this.ctx.query._id; // 获取申请的id
+    console.log(id);
     const origin = await Adjust.findById(id); // 获取原始申请表里的申请记录
     // console.log(origin);
     const adjustInstance = await this.ctx.request.body; // 获取审核后完善的数据
@@ -148,13 +103,9 @@ class VerifyService extends Service {
 
         // 审核通过，执行申请的操作(但是没有catch 错误)
         // eslint-disable-next-line no-unused-vars
-
+        console.log('id：' + origin.objectId);
         switch (origin.action) {
-          // 品类新增不用审核
-          // case '0': {
-          //   result = await Category.create(origin.changedData);
-          //   break;
-          // }
+
           case '1': {
             result = await Category.updateOne({ _id: origin.objectId }, origin.changedData); // 修改
             console.log('到底更新了什么：' + origin.changedData);
