@@ -7,7 +7,7 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
   const NewsSchema = new Schema({
-    object: String, // 对象标识
+    object: { type: String, required: true }, // 对象标识
     action: String, // 动作标识
     read: { type: String, default: '0' }, // 是否已读，0表示未读，1表示已读
     reason: { type: String }, // 审核 产生的理由
