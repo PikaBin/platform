@@ -157,7 +157,7 @@ class VerifyService extends Service {
         };
       }
       // 若更新成功，判断是否审核通过,并根据不同的结果进行不同的处理，1表示审核通过
-      let result; // 存放 操作结果
+      let result; // 存放 执行操作结果
       if (adjustInstance.auditStatus === '1') {
 
         // 审核通过，执行申请的操作(但是没有catch 错误)
@@ -202,7 +202,7 @@ class VerifyService extends Service {
         auditTime: adjustInstance.auditTime, // 审核时间
         result: adjustInstance.auditStatus, // 审核结果
         timestamp: Date.now(), // 时间戳，
-        verifiedData: adjustInstance.changeData,
+        verifiedData: origin.changedData, // 暂时用原始申请的附属数据替代，其实二者应该一致
       });
 
       // 判断审核是否成功，若申请数据为空（前端判断）申请记录没有更新，申请操作没有执行，没有发送消息皆判定审核失败
