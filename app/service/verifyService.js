@@ -141,7 +141,7 @@ class VerifyService extends Service {
         // 更改申请表记录，插入审核人，审核时间，改变审核状态
         let changeAdjust = {};
         const updateResult = await Adjust.updateOne({ _id: id }, adjustInstance);
-        console.log(updateResult);
+        // console.log(updateResult);
         if (updateResult.nModified === 0) {
           changeAdjust = {
             status: '0',
