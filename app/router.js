@@ -31,4 +31,11 @@ module.exports = app => {
   // 品类审核
   router.post('/platform/verifycategory', controller.verifyController.verifyCategory); // 处理品类审核
 
+
+  /**
+   * 工单
+   */
+  router.get('/platform/findnewOrder', controller.workorder.findOrder); // 发现新增的订单
+  router.post('/platform/addworkorder', controller.workorder.workorderAdd); // 自动增加工单
+
 };
