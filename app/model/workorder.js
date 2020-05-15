@@ -1,8 +1,7 @@
 'use strict';
 
 /**
- * 工单表 字段设计说明：
- * 不足：
+ * 工单表 字段设计说明
  */
 
 module.exports = app => {
