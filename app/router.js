@@ -43,4 +43,10 @@ module.exports = app => {
    */
   router.get('/platform/queryoperator/', controller.operatorInfo.queryOperator); // 查询运营商id
 
+  /**
+   * 订单
+   */
+  router.get('/platform/queryorder', controller.order.queryOrder); // 查询订单，根据订单信息
+  router.get('/platform/queryworkorder', controller.order.queryWorkorder); // 查询订单对应的工单
+
 };

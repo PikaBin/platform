@@ -49,7 +49,7 @@ class OperatorInfo extends Service {
     const query = await this.ctx.query;
     const Operator = this.ctx.model.Operator;
     const foundData = await Operator.find(query);
-    if (foundData) {
+    if (foundData.length !== 0) {
       return {
         information: '查询成功',
         status: '1',
