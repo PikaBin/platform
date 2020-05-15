@@ -66,7 +66,7 @@ class LoginController extends Controller {
         this.ctx.body = {
           status: 'false',
           authority: 'admin',
-          information: '用户名或者密码不正确',
+          result: '用户名或者密码不正确',
         };
         return;
       }
@@ -74,7 +74,7 @@ class LoginController extends Controller {
       this.ctx.body = {
         status: 'false',
         authority: 'admin',
-        information: '验证码不正确',
+        result: '验证码不正确',
       };
       return;
     }
