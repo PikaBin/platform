@@ -46,12 +46,20 @@ class OperatorInfo extends Service {
   * 此处有个问题，如果查询没有得到结果，前端只会得到一个created的值；现在进行初步改进，加一个if判断；
   */
   async queryOperator() {
+    const query = await this.ctx.query;
     const Operator = this.ctx.model.Operator;
-    const foundData = await Operator.findById(this.ctx.query._id);
+    const foundData = await Operator.find(query);
     if (foundData) {
-      return foundData;
+      return {
+        information: '查询成功',
+        status: '1',
+        foundData,
+      };
     }
-    return null;
+    return {
+      information: '查询成功，但是没有对应的运营商',
+      status: '0',
+    }
   }
 
 
