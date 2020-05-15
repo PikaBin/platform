@@ -54,6 +54,18 @@
 
 // createOrder();
 'use strict';
-console.log('qwe'.toUpperCase());
-console.log(typeof (Date.now()));
-console.log(new Date().getTime());
+// console.log('qwe'.toUpperCase());
+// console.log(typeof (Date.now()));
+// console.log(new Date().getTime());
+
+// const o = {
+//   a: 'b',
+//   c: 'd',
+// };
+// console.log(o.length);
+const u = undefined;
+// if (!u) {
+//   console.log('undefinde 是对的');
+// }
+let w = u ? u:'right';
+console.log(w);
