@@ -38,4 +38,9 @@ module.exports = app => {
   router.get('/platform/findnewOrder', controller.workorder.findOrder); // 发现新增的订单
   router.post('/platform/addworkorder', controller.workorder.workorderAdd); // 自动增加工单
 
+  /**
+   * 运营商
+   */
+  router.get('/platform/queryoperator/', controller.operatorInfo.queryOperator); // 查询运营商id
+
 };

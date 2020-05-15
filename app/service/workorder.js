@@ -29,7 +29,7 @@ class WorkorderService extends Service {
 
     // 判断是否更新，如果更新，则取出，并且更新session,
     if (oldID < lastID) {
-      const newOrders = await Order.find({ orderId: { $gt: oldID } });
+      const newOrders = await Order.find({ orderId: { $gt: oldID } }).limit(2); // 为了测试,进行限制
       this.ctx.session.orderId = lastID;
       return newOrders;
     }
@@ -41,27 +41,32 @@ class WorkorderService extends Service {
   }
   // 新增工单，通过检测订单表的更新从而新增对应的工单
   async workorderAdd() {
-    // console.log('body内容：' + JSON.stringify(this.ctx.request.body));
+
     const Workorder = this.ctx.model.Workorder;
     const newOrders = await this.findUpdatedOrder(); // 获取新增的订单
-    console.log('获取的新的订单是什么样的：' + newOrders.length);
+    // console.log('获取的新的订单是什么样的：' + newOrders.length);
     if (newOrders.length !== undefined) {
 
       const workorders = []; // 存放新增的工单
       try {
         for (let i = 0; i < newOrders.length; i++) {
           const order = newOrders[i];
-          console.log('每一个订单' + order);
+          // console.log('每一个订单' + order);
 
+          // 查询单品分区对应的运营商，
+          const Partition = this.ctx.model.Partition;
+          const Category = this.ctx.model.Category;
+          const partition = await Partition.findById(order.partitionId).populate('itemID');
+          // console.log('单品是：' + partition);
+          const categoryInstance = await Category.findById(partition.itemID.categoryID);
+          // console.log('运营商是：' + categoryInstance);
           const workorderInstance = await Workorder.create({
-          // _id: 自动生成
             name: order.orderId,
             itemPartition: order.partitionId,
             orderID: order._id,
-            operatorID: null,
-            state: 2, // 由于是新生成的工单，所以工单状态默认为2(待分配)
-            startTime: new Date(), // 此处有坑，mongodb数据库存入的时间会自动转化为零时区的时间，给以后的查询带来很大不便
-            serverTime: order.orderStartTime,
+            operatorID: categoryInstance.categoryOperator,
+            state: '2', // 由于是新生成的工单，所以工单状态默认为2(待分配)
+            startTime: new Date(), // 此处有坑，mongodb数据库存入的时间会自动转化为零时区的时间，但是前端显示会自动转为本地时间
             requirement: order.remark,
             customerPhone: order.phone,
           });
@@ -77,6 +82,12 @@ class WorkorderService extends Service {
         };
       }
     }
+
+    // 如果没有新增订单
+    return {
+      information: '无新增订单',
+      status: '2',
+    };
 
   }
 

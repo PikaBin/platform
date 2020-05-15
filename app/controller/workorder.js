@@ -20,7 +20,6 @@ class workorderController extends Controller {
   async workorderAdd() {
     try {
       const workorders = await this.ctx.service.workorder.workorderAdd();
-      console.log('workorder内容：' + workorders);
       this.ctx.status = 200;
       this.ctx.body = workorders;
     } catch (err) {
