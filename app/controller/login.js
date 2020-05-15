@@ -64,7 +64,7 @@ class LoginController extends Controller {
         console.log('查询结果信息：' + result[0]);
       } else {
         this.ctx.body = {
-          status: 'failed',
+          status: 'false',
           authority: 'admin',
           information: '用户名或者密码不正确',
         };
@@ -72,7 +72,7 @@ class LoginController extends Controller {
       }
     } else {
       this.ctx.body = {
-        status: 'failed',
+        status: 'false',
         authority: 'admin',
         information: '验证码不正确',
       };
