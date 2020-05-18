@@ -6,7 +6,7 @@ const Subscription = require('egg').Subscription;
 class OrderStart extends Subscription {
   static get schedule() {
     return {
-      interval: '10s',
+      interval: '60s',
       // cron: '*/15 * * * * *',
       type: 'all',
     };
@@ -14,7 +14,7 @@ class OrderStart extends Subscription {
 
   async subscribe() {
     // await this.ctx.service.workorder.workorderAdd();
-    // await this.ctx.service.workorder.workorderAutoAdd();
+    await this.ctx.service.workorder.workorderAutoAdd();
     // console.log(1);
   }
 }
