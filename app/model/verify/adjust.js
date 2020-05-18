@@ -9,6 +9,7 @@ module.exports = app => {
     object: { type: String, required: true }, // 审核对象，c：品类，o:运营商，I:单品，i: 中断要求,p:分区,t:任务
     action: { type: String, required: true }, // 动作标识，0：增加，1：修改，2：删除，上架：3，下架：4，
     auditorID: { type: String }, // 审核员ID
+    operatorId: { type: Schema.Types.ObjectId, required: true }, // 发送申请的运营商id
     auditTime: Date, // 审核时间
     applyTime: { type: Date, required: true, default: new Date() }, // 申请时间
     result: { type: String }, // 审核结果
