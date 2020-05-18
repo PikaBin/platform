@@ -83,15 +83,15 @@ class VerifyService extends Service {
    * 处理品类 提交的审核
    * 主要改动有以下两点：首先，改变数据：改变审核状态，插入审核时间，审核人；做出申请动作，例如删除，修改
    * 其次，发送运营商消息，通知运营商;
-   * 前端发送 申请id,
+   * 前端发送 申请id,审核时的数据
    */
   async verifyCategory() {
     const Staff = this.ctx.model.Staff;
     const News = this.ctx.model.Verify.News;
     const Category = this.ctx.model.Category;
     const Adjust = this.ctx.model.Verify.Adjust;
-    const id = this.ctx.query._id; // 获取申请的id
-    console.log(id);
+    const id = this.ctx.query._id; // 获取申请记录的id
+    // console.log(id);
     const origin = await Adjust.findById(id); // 获取原始申请表里的申请记录
     // console.log(origin);
     const adjustInstance = await this.ctx.request.body; // 获取审核后完善的数据
@@ -103,13 +103,13 @@ class VerifyService extends Service {
 
         // 审核通过，执行申请的操作(但是没有catch 错误)
         // eslint-disable-next-line no-unused-vars
-        console.log('id：' + origin.objectId);
+        // console.log('id：' + origin.objectId);
         switch (origin.action) {
 
           case '1': {
             result = await Category.updateOne({ _id: origin.objectId }, origin.changedData); // 修改
             console.log('到底更新了什么：' + origin.changedData);
-            await Category.updateOne({ _id: origin.objectId }, { categoryverifyTime: new Date() });
+            await Category.updateOne({ _id: origin.objectId }, { categoryverifyTime: new Date(), categoryExamineTF: '1' });
             break;
           }
           case '2': {
@@ -135,7 +135,7 @@ class VerifyService extends Service {
 
 
       // 判断执行条件
-      // 审核通过，操作也通过或者前端审核未通过，
+      // 审核通过操作成功或者前端审核未通过，
       if (result || adjustInstance.auditStatus === '2') {
 
         // 更改申请表记录，插入审核人，审核时间，改变审核状态
@@ -158,14 +158,16 @@ class VerifyService extends Service {
         const auditor = await Staff.findById(adjustInstance.auditorID, { name: 1 });
         // console.log('name: ' + auditor.name);
         const newsInstance = await News.create({
-          object: 'c',
-          action: origin.action,
-          reason: adjustInstance.reason, // 审核 理由
-          auditorName: auditor.name, // 审核人姓名
-          auditTime: adjustInstance.auditTime, // 审核时间
-          result: adjustInstance.auditStatus, // 审核结果
-          timestamp: Date.now(), // 时间戳，
-          verifiedData: origin.changedData, // 暂时用原始申请的附属数据替代，其实二者应该一致
+          receiveId: origin.operatorId, // 消息接受对象的id
+          senderId: adjustInstance.auditorID, // 发送方id
+          auditorName: auditor.name, // 发送消息者姓名
+          object: 'p', // 发送对象标识 o:运营商，p:平台，z:专才，y:用户
+          action: 'q', // 动作标识 处理动作标识 t:提交审核，q:确认审核，p:派单，j:接单
+          detailObject: 'c', // 具体处理对象标识 c:品类	t:任务  o:运营商	z:专才 I:单品	log:工作日志  p:分区	g:工单
+          detailObjectId: origin.objectId, // 具体处理对象id
+          result: adjustInstance.result, // 处理结果 0 – 未处理 / 1 – 成功 / 2 – 不成功
+          timestamp: Date.now(),
+          verifiedData: adjustInstance, // 存放相关中间表字段
         });
 
         // 返回结果
