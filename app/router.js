@@ -6,8 +6,8 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
-  // 注册，登录
 
+  // 平台员工 注册，登录
   router.post('/platform/signup', controller.login.signUp);// 注册
   router.get('/platform/signin', controller.login.signIn_get); // 返回验证码 代码
   router.get('/platform/signin_test', controller.login.signIn_test); // 返回验证码图片
@@ -41,8 +41,11 @@ module.exports = app => {
   /**
    * 运营商
    */
-  router.get('/platform/queryoperator/', controller.operatorInfo.queryOperator); // 查询运营商id
-
+  router.get('/platform/queryoperator/', controller.operatorInfo.queryOperator); // 查询运营商
+  router.post('/platform/addoperator', controller.operatorInfo.addOperator); // 添加运营商
+  router.post('/platform/addcontract', controller.operatorInfo.addContract); // 新增运营商合约
+  router.get('/platform/querycontract', controller.operatorInfo.queryO_contract); // 查询运营商合约
+  router.post('/platform/verifyoperator', controller.verifyController.verifyOperator); // 处理运营商申请
   /**
    * 订单
    */

@@ -24,6 +24,12 @@ class VerifyController extends Controller {
     this.ctx.body = result;
   }
 
+  // 处理运营商申请
+  async verifyOperator() {
+    const result = await this.ctx.service.verifyService.verifyOperator();
+    this.ctx.body = result;
+  }
+
 }
 
 module.exports = VerifyController;

@@ -34,17 +34,8 @@ class OperatorInfoController extends Controller {
    */
   async updateOperator() {
     // 获取前端数据
-    const req = await this.ctx.request.body;
-    // console.log('前端数据' + req);
-    try {
-      const updatedData = await this.service.operatorInfo.updateOperator(req);
-      // console.log(updatedData);
-      this.ctx.body = updatedData;
-      this.ctx.status = 201;
-    } catch (err) {
-      console.log(err);
-      this.ctx.body = "页面出现了未知错误";
-    }
+    const result = await this.ctx.service.operatorInfo.updateOperator();
+    this.ctx.body = result;
   }
 
   /**
@@ -91,6 +82,18 @@ class OperatorInfoController extends Controller {
       fields: stream.fields,
     };
 
+  }
+
+  // 新增运营商合约
+  async addContract() {
+    const result = await this.ctx.service.operatorInfo.addoperatorContract();
+    this.ctx.body = result;
+  }
+
+  // 查询运营商合约
+  async queryO_contract() {
+    const result = await this.ctx.service.operatorInfo.queryO_contract();
+    this.ctx.body = result;
   }
 }
 
