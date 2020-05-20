@@ -99,6 +99,7 @@ class WorkorderService extends Service {
     const Partition = this.ctx.model.Partition;
     const Category = this.ctx.model.Category;
     const Workorder = this.ctx.model.Workorder;
+    const CashFlow = this.ctx.model.Cashflow;
 
     // 查询未生成工单 的订单
     const newOrders = await Order.find({ orderState: '0' }).limit(3);
@@ -131,10 +132,14 @@ class WorkorderService extends Service {
           });
           workorders.push(workorderInstance);
 
-          // 改变订单的状态为已生成工单 '1'
+          // 改变订单的状态为已生成工单 ('1')
           // eslint-disable-next-line no-unused-vars
           const updateState = await Order.updateOne({ _id: order._id }, { orderState: '1' });
           // console.log('生成工单后的订单状态' + order._id + updateState.nModified);
+
+          // 完善现金流量表内容（工单id）
+          const workorderTocash = await CashFlow.updateOne({ orderId: order._id }, { workorderId: workorderInstance._id });
+          console.log('添加了吗：' + workorderTocash);
         }
 
         return workorders;

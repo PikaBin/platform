@@ -10,21 +10,18 @@ module.exports = app => {
   const Schema = mongoose.Schema;
 
   const cashflowSchema = new Schema({
-    _id: Schema.Types.ObjectId,
-    orderID: { type: Schema.Types.ObjectId, ref: 'Order', required: true },
-    workOrderID: { type: Schema.Types.ObjectId, ref: 'workOrder', required: true },
-    price: { type: Number, ref: 'Servicer', required: true },
-    userPayable: { type: Number, ref: 'Servicer', required: true },
-    refund: { type: Number, ref: 'Servicer', required: true },
-    servicerID: { type: Schema.Types.ObjectId, ref: 'Servicer', required: true },
-    serverReceivable: { type: Number, ref: 'Servicer', required: true },
-    serverTF: { type: Boolean, ref: 'Servicer', required: true },
-    operatorID: { type: Schema.Types.ObjectId, ref: 'Operator', required: true },
-    operatorReceivable: { type: Number, ref: 'Servicer', required: true },
-    operatorTF: { type: Boolean, ref: 'Servicer', required: true },
-    systemReceivable: { type: Number, ref: 'Servicer', required: true },
-    addTime: { type: Date, ref: 'Servicer', required: true, default: Date.now() },
-    note: { type: String, required: true },
+    orderId: { type: Schema.Types.ObjectId, ref: 'Order', required: true }, // 订单id
+    workOrderId: { type: Schema.Types.ObjectId, ref: 'workOrder' }, // 工单id
+    userPayable: { type: Number, required: true }, // 用户应付款
+    refund: { type: Number, ref: 'Servicer', required: true, default: 0 }, // 退款
+    servicerId: { type: Schema.Types.ObjectId, ref: 'Servicer' }, // 接单的专才id
+    serverReceivable: { type: Number, required: true, default: 0 }, // 专才所得
+    operatorId: { type: Schema.Types.ObjectId, ref: 'Operator' }, // 运营商id
+    operatorReceivable: { type: Number, required: true, default: 0 }, // 运营商所得
+    systemReceivable: { type: Number, required: true }, // 平台所得
+    addTime: { type: Date, default: new Date() }, // 产生时间
+    timestamp: { type: Number, default: Date.now() }, // 产生时的时间戳
+    state: { type: String, default: '2' }, // 结算状态，0 - 中止/ 1- 顺利完成/ 2 - 正在进行
   });
 
   return mongoose.model('Cashflow', cashflowSchema);
