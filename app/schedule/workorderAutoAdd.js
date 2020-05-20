@@ -14,7 +14,7 @@ class OrderStart extends Subscription {
 
   async subscribe() {
     // await this.ctx.service.workorder.workorderAdd();
-    // await this.ctx.service.workorder.workorderAutoAdd();
+    await this.ctx.service.workorder.workorderAutoAdd();
     // console.log(1);
   }
 }
