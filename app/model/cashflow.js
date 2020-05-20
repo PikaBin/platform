@@ -11,14 +11,14 @@ module.exports = app => {
 
   const cashflowSchema = new Schema({
     orderId: { type: Schema.Types.ObjectId, ref: 'Order', required: true }, // 订单id
-    workOrderId: { type: Schema.Types.ObjectId, ref: 'workOrder' }, // 工单id
+    workOrderId: { type: Schema.Types.ObjectId, ref: 'Workorder' }, // 工单id
     userPayable: { type: Number, required: true }, // 用户应付款
-    refund: { type: Number, ref: 'Servicer', required: true, default: 0 }, // 退款
+    refund: { type: Number, required: true, default: 0 }, // 退款
     servicerId: { type: Schema.Types.ObjectId, ref: 'Servicer' }, // 接单的专才id
     serverReceivable: { type: Number, required: true, default: 0 }, // 专才所得
     operatorId: { type: Schema.Types.ObjectId, ref: 'Operator' }, // 运营商id
     operatorReceivable: { type: Number, required: true, default: 0 }, // 运营商所得
-    systemReceivable: { type: Number, required: true }, // 平台所得
+    systemReceivable: { type: Number, required: true, default: 0 }, // 平台所得
     addTime: { type: Date, default: new Date() }, // 产生时间
     timestamp: { type: Number, default: Date.now() }, // 产生时的时间戳
     state: { type: String, default: '2' }, // 结算状态，0 - 中止/ 1- 顺利完成/ 2 - 正在进行
