@@ -8,7 +8,7 @@ class VerifyService extends Service {
   /**
    * 通用审核方法
    * @param {Model} target 处理对象model
-   * @param {*} adjustId 对应的申请记录id
+   * @param {ObjectId} adjustId 对应的申请记录id
    * @param {String}  detailO 具体对象标志
    */
   async verify(target, adjustId, detailO) {
@@ -29,7 +29,6 @@ class VerifyService extends Service {
       if (adjustInstance.auditStatus === '1') {
 
         // 审核通过，执行申请的操作(但是没有catch 错误)
-        // eslint-disable-next-line no-unused-vars
         // console.log('id：' + origin.objectId);
         switch (origin.action) {
 
@@ -72,7 +71,7 @@ class VerifyService extends Service {
         if (updateResult.nModified === 0) {
           changeAdjust = {
             status: '0',
-            information: '申请表没有更新,审核失败',
+            information: '申请表没有更新,审核失败或者 审核不通过',
           };
         } else {
           changeAdjust = {

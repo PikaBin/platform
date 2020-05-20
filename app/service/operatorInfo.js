@@ -133,7 +133,7 @@ class OperatorInfo extends Service {
   async queryO_contract() {
     const OperatorContract = this.ctx.model.Operatorcontract;
     const query = await this.ctx.query;
-    const findResult = await this.query(OperatorContract,query);
+    const findResult = await this.query(OperatorContract, query);
     return findResult;
   }
 
