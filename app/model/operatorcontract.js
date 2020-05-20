@@ -13,7 +13,7 @@ module.exports = app => {
     grade: { type: String, required: false }, // 合约等级 A，B,C,等等
     state: { type: String, required: true, default: '1' }, // 状态（0 – 结束 / 1 – 进行中）
     operatorID: { type: Schema.Types.ObjectId, required: true }, // 运营商ID
-    shar: { type: Number, required: false }, // 专才分成（订单总额百分比）
+    shar: { type: Number, required: false }, // 运营商分成（订单总额百分比）
     minOrder: { type: Number, required: true }, // 约定每月最低接单数
     minScore: { type: Number, required: true }, // 客户评分下限
     minCooperationTime: { type: String, required: false }, // 最短合作时间

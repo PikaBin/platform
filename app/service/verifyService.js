@@ -91,7 +91,7 @@ class VerifyService extends Service {
           action: 'q', // 动作标识 处理动作标识 t:提交审核，q:确认审核，p:派单，j:接单
           detailObject: detailO, // 具体处理对象标识 c:品类	t:任务  o:运营商	z:专才 I:单品	log:工作日志  p:分区	g:工单
           detailObjectId: origin.objectId, // 具体处理对象id
-          result: adjustInstance.result, // 处理结果 0 – 未处理 / 1 – 成功 / 2 – 不成功
+          result: adjustInstance.auditStatus, // 处理结果 0 – 未处理 / 1 – 成功 / 2 – 不成功
           timestamp: Date.now(),
           verifiedData: adjustInstance, // 存放相关中间表字段
         });
