@@ -14,7 +14,7 @@ module.exports = app => {
   router.post('/platform/signin', controller.login.signIn); // 处理登录
 
   /**
-   * staff
+   * staff 员工
    */
   router.post('/platform/addstaff', controller.staff.addStaff); // 新增平台员工
   router.get('/platform/querystaff', controller.staff.queryStaff); // 查询平台员工
