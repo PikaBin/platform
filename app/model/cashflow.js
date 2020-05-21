@@ -21,7 +21,7 @@ module.exports = app => {
     systemReceivable: { type: Number, required: true, default: 0 }, // 平台所得
     addTime: { type: Date, default: new Date() }, // 产生时间
     timestamp: { type: Number, default: Date.now() }, // 产生时的时间戳
-    state: { type: String, default: '2' }, // 结算状态，0 - 中止/ 1- 顺利完成/ 2 - 正在进行
+    state: { type: String, default: '2' }, // 结算状态，0 - 中止/ 1- 顺利完成/ 2 - 正在进行/
   });
 
   return mongoose.model('Cashflow', cashflowSchema);

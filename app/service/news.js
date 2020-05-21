@@ -43,7 +43,7 @@ class NewsService extends Service {
     const query = this.ctx.query;
     console.log(query);
     try {
-      const findresult = await News.find(query);
+      const findresult = await News.find(query).sort({ timestamp: -1 });
 
       if (findresult.length !== 0) {
         return {

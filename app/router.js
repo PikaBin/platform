@@ -52,4 +52,9 @@ module.exports = app => {
   router.get('/platform/queryorder', controller.order.queryOrder); // 查询订单，根据订单信息
   router.get('/platform/queryworkorder', controller.order.queryWorkorder); // 查询订单对应的工单
 
+  /**
+   * 现金流量表
+   */
+  router.get('/platform/querycash', controller.cashflow.queryCashflow); // 查询现金流量表
+
 };
