@@ -86,16 +86,16 @@ class CashService extends Service {
     // 循环计算
     for (let i = 0; i < badOrders.length; i++) {
       const badorder = badOrders[i];
-      const badworkorder = await Workorder.find({ orderID: badorder._id });
+      const badworkorder = await Workorder.findOne({ orderID: badorder._id });
 
       // 找出扣除的分成
-      const latestLog = await WorkorderLog.find({ workorderId: badworkorder._id }).sort({ _id: -1 }).limit(1);
+      const latestLog = await WorkorderLog.findOne({ workorderId: badworkorder._id }).sort({ _id: -1 }).limit(1);
       const task = Task.findById(latestLog.taskId);
       const receiveable = task.receivable;
 
       // 计算三端所得
-      const servicerContract = await Contract.find({ servicerID: badworkorder.servicer }); // 接单的专才合同
-      const operator_C = await operatorContract.find({ operatorID: badworkorder.operatorID }); // 接单的运营商合同
+      const servicerContract = await Contract.findOne({ servicerID: badworkorder.servicer }); // 接单的专才合同
+      const operator_C = await operatorContract.findOne({ operatorID: badworkorder.operatorID }); // 接单的运营商合同
       const refund = receiveable * badOrders.cost;
       const servicerCash = receiveable * badorder.cost * servicerContract.shar; // 专才所得
       const operatorCash = receiveable * badorder.cost * operator_C.shar; // 运营商所得
