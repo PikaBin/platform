@@ -31,6 +31,9 @@ module.exports = app => {
   // 品类审核
   router.post('/platform/verifycategory', controller.verifyController.verifyCategory); // 处理品类审核
 
+  // 单品审核
+  router.post('/platform/verifyitem', controller.verifyController.verifyItem); // 单品上下架审核
+
 
   /**
    * 工单

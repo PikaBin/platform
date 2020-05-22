@@ -30,6 +30,12 @@ class VerifyController extends Controller {
     this.ctx.body = result;
   }
 
+  // 处理单品上下架申请
+  async verifyItem() {
+    const result = await this.ctx.service.verifyService.verifyItem();
+    this.ctx.body = result;
+  }
+
 }
 
 module.exports = VerifyController;
