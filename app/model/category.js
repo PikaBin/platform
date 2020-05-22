@@ -33,7 +33,7 @@ module.exports = app => {
     categoryUptime: { type: Date }, // 上架时间
     categoryOfftime: { type: Date }, // 下架时间
     categoryReviseTime: { type: Date },
-    categoryverifyTime: { type: Date }, // 审核时间
+    verifyTime: { type: Date }, // 审核时间 新增
   });
 
   return mongoose.model('Category', categorySchema);

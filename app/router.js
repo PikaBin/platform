@@ -62,4 +62,10 @@ module.exports = app => {
    */
   router.get('/platform/getnews', controller.news.getNews); // 接受消息
   router.post('/platform/setread', controller.news.setRead); // 消息阅读
+
+  /**
+   * 数据分析
+   */
+  // 首页 销售额
+  router.get('/plarform/totalamout', controller.homeanalysis.totalAmount); // 首页销售额
 };

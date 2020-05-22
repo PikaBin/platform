@@ -35,7 +35,7 @@ class VerifyService extends Service {
           case '1': {
             result = await target.updateOne({ _id: origin.objectId }, origin.changedData); // 修改
             console.log('到底更新了什么：' + origin.changedData);
-            // await target.updateOne({ _id: origin.objectId }, { categoryverifyTime: new Date(), categoryExamineTF: '1' });
+            await target.updateOne({ _id: origin.objectId }, { verifyTime: new Date(), examineTF: '1' });
             break;
           }
           case '2': {
