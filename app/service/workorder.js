@@ -118,15 +118,15 @@ class WorkorderService extends Service {
           const partition = await Partition.findById(order.partitionId).populate('itemID');
           console.log('单品是：' + partition);
           // const categoryInstance = await Category.findById(partition.itemID.categoryID);
-          const itemInstance = await Operator.findById(partition.itemID._id);
-          console.log('运营商是：' + itemInstance);
+          // const itemInstance = await Operator.findById(partition.itemID._id);
+          // console.log('运营商是：' + itemInstance);
 
           // 创建对应的工单
           const workorderInstance = await Workorder.create({
             name: order.orderId,
             itemPartition: order.partitionId,
             orderID: order._id,
-            operatorID: itemInstance.operatorID,
+            operatorID: partition.itemID.operatorID,
             state: '2', // 由于是新生成的工单，所以工单状态默认为2(待分配)
             startTime: new Date(), // 此处有坑，mongodb数据库存入的时间会自动转化为零时区的时间，但是前端显示会自动转为本地时间
             requirement: order.remark,
