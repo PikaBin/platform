@@ -14,7 +14,7 @@ module.exports = app => {
   router.post('/platform/signin', controller.login.signIn); // 处理登录
 
   /**
-   * staff 员工
+   * staff 员工基础信息
    */
   router.post('/platform/addstaff', controller.staff.addStaff); // 新增平台员工
   router.get('/platform/querystaff', controller.staff.queryStaff); // 查询平台员工
@@ -57,4 +57,9 @@ module.exports = app => {
    */
   router.get('/platform/querycash', controller.cashflow.queryCashflow); // 查询现金流量表
 
+  /**
+   * 消息管理
+   */
+  router.get('/platform/getnews', controller.news.getNews); // 接受消息
+  router.post('/platform/setread', controller.news.setRead); // 消息阅读
 };

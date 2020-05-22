@@ -22,6 +22,7 @@ module.exports = app => {
     result: { type: String }, // 处理结果 0 – 未处理 / 1 – 成功 / 2 – 不成功
     timestamp: { type: Number, default: Date.now() }, // 时间戳，表明消息的产生时间
     verifiedData: Schema.Types.Mixed, // 存放相关中间表字段
+    addTime: { type: Date, default: new Date() }, // 消息产生时间
 
   });
 
