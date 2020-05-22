@@ -6,7 +6,7 @@ const Subscription = require('egg').Subscription;
 class OrderStart extends Subscription {
   static get schedule() {
     return {
-      interval: '60s',
+      interval: '10s',
       // cron: '*/15 * * * * *',
       type: 'all',
     };

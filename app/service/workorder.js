@@ -97,12 +97,13 @@ class WorkorderService extends Service {
   async workorderAutoAdd() {
     const Order = this.ctx.model.Order;
     const Partition = this.ctx.model.Partition;
-    const Category = this.ctx.model.Category;
+    // const Category = this.ctx.model.Category;
+    const Operator = this.ctx.model.Operator;
     const Workorder = this.ctx.model.Workorder;
     const CashFlow = this.ctx.model.Cashflow;
 
     // 查询未生成工单 的订单
-    const newOrders = await Order.find({ orderState: '0' }).limit(3);
+    const newOrders = await Order.find({ orderState: '0' });
 
     // 如果有这样的订单存在
     if (newOrders.length !== 0) {
@@ -115,16 +116,17 @@ class WorkorderService extends Service {
 
           // 查询单品分区对应的运营商，
           const partition = await Partition.findById(order.partitionId).populate('itemID');
-          // console.log('单品是：' + partition);
-          const categoryInstance = await Category.findById(partition.itemID.categoryID);
-          // console.log('运营商是：' + categoryInstance);
+          console.log('单品是：' + partition);
+          // const categoryInstance = await Category.findById(partition.itemID.categoryID);
+          const itemInstance = await Operator.findById(partition.itemID._id);
+          console.log('运营商是：' + itemInstance);
 
           // 创建对应的工单
           const workorderInstance = await Workorder.create({
             name: order.orderId,
             itemPartition: order.partitionId,
             orderID: order._id,
-            operatorID: categoryInstance.categoryOperator,
+            operatorID: itemInstance.operatorID,
             state: '2', // 由于是新生成的工单，所以工单状态默认为2(待分配)
             startTime: new Date(), // 此处有坑，mongodb数据库存入的时间会自动转化为零时区的时间，但是前端显示会自动转为本地时间
             requirement: order.remark,
@@ -138,7 +140,7 @@ class WorkorderService extends Service {
           // console.log('生成工单后的订单状态' + order._id + updateState.nModified);
 
           // 完善现金流量表内容（工单id）
-          console.log(order._id);
+          // console.log(order._id);
           const workorderTocash = await CashFlow.updateOne({ orderId: order._id }, { workOrderId: workorderInstance._id });
           console.log('添加了吗：' + JSON.stringify(workorderTocash));
         }

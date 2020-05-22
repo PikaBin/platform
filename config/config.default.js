@@ -36,7 +36,7 @@ module.exports = appInfo => {
   // 配置数据库
   exports.mongoose = {
     client: {
-      url: 'mongodb://admin:admin123@59.110.162.236:27017/SharedService?authSource=admin',
+      url: 'mongodb://admin:admin123@59.110.162.236:27017/Design?authSource=admin',
       options: {
         useNewUrlParser: true,
         useUnifiedTopology: true,

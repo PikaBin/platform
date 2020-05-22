@@ -16,7 +16,7 @@ module.exports = app => {
     partitionId: { type: String, required: false }, // 服务分区ID
     remark: { type: String, required: false }, // 备注
     purchaseQuantity: { type: String, required: false }, // 购买数量
-    customerId: { type: String, required: false }, // 买家id
+    customerId: { type: Schema.Types.ObjectId, required: false }, // 买家id
     phone: { type: String, required: false }, // 联系电话
     orderStartTime: { type: Date, required: false }, // 订单开始时间
   });
