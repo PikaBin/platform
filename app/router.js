@@ -34,6 +34,7 @@ module.exports = app => {
   // 单品审核
   router.post('/platform/verifyitem', controller.verifyController.verifyItem); // 单品上下架审核
   router.get('/platform/queryitem', controller.item.queryItem); // 查看单品
+  router.get('/platform/listitem', controller.item.listItem); // 单品列表
 
 
   /**
