@@ -361,8 +361,8 @@ class VerifyService extends Service {
             break;
           }
           case '3': {
-            result = await Item.updateOne({ _id: origin.objectId }, { itemState: '1' }); // 上架
-            const examine = await Item.updateOne({ _id: origin.objectId }, { VerifyTime: new Date(), examineTF: '1' });
+            result = await Item.updateOne({ _id: origin.objectId }, { itemState: '1', VerifyTime: new Date(), examineTF: '1' }); // 上架
+            const examine = await Item.updateOne({ _id: origin.objectId }, origin.changedData);
             console.log('是否审核：', examine);
             break;
           }

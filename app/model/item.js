@@ -16,7 +16,7 @@ module.exports = app => {
     itemAddTime: { type: Date, default: new Date() },
     itemReviseTime: { type: Date },
     itemDeleteTime: { type: Date },
-    VerifyTime: Date,
+    VerifyTime: Date, // 审核时间
     operatorID: { type: Schema.Types.ObjectId, ref: 'Operator', required: true },
   });
 

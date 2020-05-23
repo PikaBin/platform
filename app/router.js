@@ -70,5 +70,5 @@ module.exports = app => {
    * 数据分析
    */
   // 首页 销售额
-  router.get('/plarform/totalamout', controller.homeanalysis.totalAmount); // 首页销售额
+  router.get('/platform/totalamout', controller.homeanalysis.totalAmount); // 首页销售额
 };
