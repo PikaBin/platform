@@ -23,7 +23,7 @@ class ItemService extends Service {
    */
   async queryByItem() {
     const query = await this.ctx.request.query;
-    query._id = await this.ctx.service.tools.getObjectId(query._id);
+    // query._id = await this.ctx.service.tools.getObjectId(query._id);
     console.log('query' + JSON.stringify(query));
     const Item = this.ctx.model.Item;
     const findResult = await Item.aggregate([{ $match: query },
