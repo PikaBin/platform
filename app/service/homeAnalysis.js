@@ -39,51 +39,38 @@ class HomeAnalysis extends Service {
     }
   }
 
-  // 首页的总销售额相关
+  // 首页的总销售额
   async salesVolume() {
     const Order = this.ctx.model.Order;
+    const attr = "$cost";
+    const result = await this.Volume(Order, attr);
+    return result;
+  }
 
-    // 获取总额
-    try {
-      // 获取总的销售额
-      const str = "$cost";
-      const result = await Order.aggregate([{
-        $group: {
-          // _id: { day: { $dayOfYear: "$orderTime" }, year: { $year: "$orderTime" } },
-          _id: null,
-          totalAmount: { $sum: str },
-          count: { $sum: 1 },
-        },
-      }]);
-      console.log('让我看看这是什么：', result);
+  // 销售额日同比
+  async onDay() {
+    const Order = this.ctx.model.Order;
+    // 计算昨天的日期
+    const time = (new Date()).getTime() - 24 * 60 * 60 * 1000;
+    const yesterday = new Date(time);
+    const result = await Order.aggregate([
+      {
+        $group:
+          {
+            _id: { day: { $dayOfYear: "$orderTime" } },
+            totalAmount: { $sum: "$cost" },
+            count: { $sum: 1 },
+          },
+      },
+      // {
+      //   $project:
+      //     {
+      //       dayRatio:
+      //     },
+      // },
+    ]);
 
-      // 获取按周期划分的销售额
-      const yearData = await Order.aggregate([{
-        $group: {
-          _id: { month: { $month: "$orderTime" }, year: { $year: "$orderTime" } },
-          totalAmount: { $sum: "$cost" },
-          count: { $sum: 1 },
-        },
-      }]);
-
-      // 计算增长比
-
-      return {
-        status: '1',
-        information: '分析成功',
-        yearData,
-        result,
-      };
-
-    } catch (err) {
-      console.log('首页销售额：', err);
-      return {
-        information: '分析失败',
-        status: '0',
-        error: err.message,
-      };
-    }
-
+    return result;
   }
 }
 

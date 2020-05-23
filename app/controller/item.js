@@ -13,8 +13,11 @@ class itemController extends Controller {
     } catch (err) {
       console.log('itemController error：' + err);
     }
+  }
 
-
+  async queryItem() {
+    const result = await this.ctx.service.item.queryByItem();
+    this.ctx.body = result;
   }
 }
 

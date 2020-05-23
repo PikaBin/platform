@@ -33,6 +33,7 @@ module.exports = app => {
 
   // 单品审核
   router.post('/platform/verifyitem', controller.verifyController.verifyItem); // 单品上下架审核
+  router.get('/platform/queryitem', controller.item.queryItem); // 查看单品
 
 
   /**
@@ -49,6 +50,7 @@ module.exports = app => {
   router.post('/platform/addcontract', controller.operatorInfo.addContract); // 新增运营商合约
   router.get('/platform/querycontract', controller.operatorInfo.queryO_contract); // 查询运营商合约
   router.post('/platform/verifyoperator', controller.verifyController.verifyOperator); // 处理运营商申请
+
   /**
    * 订单
    */
@@ -71,4 +73,5 @@ module.exports = app => {
    */
   // 首页 销售额
   router.get('/platform/totalamout', controller.homeanalysis.totalAmount); // 首页销售额
+  router.get('/platform/onday', controller.homeanalysis.onDay); // 计算日比
 };

@@ -25,6 +25,15 @@ class ToolService extends Service {
     return captcha;
   }
 
+  // 类型转化工具，转为ObjectId
+  async getObjectId(id) {
+    const ObjectId = this.app.mongoose.Types.ObjectId;
+    if (id === undefined) {
+      return;
+    }
+    return new ObjectId(id);
+  }
+
   // md5加密
   async md5(str) {
     return md5(str);

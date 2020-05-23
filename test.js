@@ -57,3 +57,7 @@ const async = require('async');
 const md5 = require('md5');
 const message = md5('123456');
 console.log(message);
+// console.log(new Date().getDate());
+const time = (new Date()).getTime() - 24 * 60 * 60 * 1000;
+const yesterday = new Date(time);
+console.log(yesterday);
