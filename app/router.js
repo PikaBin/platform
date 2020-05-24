@@ -18,6 +18,8 @@ module.exports = app => {
    */
   router.post('/platform/addstaff', controller.staff.addStaff); // 新增平台员工
   router.get('/platform/querystaff', controller.staff.queryStaff); // 查询平台员工
+  router.post('/platform/updatestaff', controller.staff.updateStaff); // 修改平台员工信息
+  router.post('/platform/addphoto', controller.staff.addPhoto); // 修改员工头像
 
 
   /**

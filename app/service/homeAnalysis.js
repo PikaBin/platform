@@ -48,6 +48,10 @@ class HomeAnalysis extends Service {
   }
 
   // 销售额日同比
+  /**
+   * 两种方法：第一种就是先算出各天的销售额，然后取出今天和昨天的数据，进行计算
+   * 第二种就是利用运算符直接算出今天和昨天的销售额，然后再算出比率，
+   */
   async onDay() {
     const Order = this.ctx.model.Order;
     // 计算昨天的日期
