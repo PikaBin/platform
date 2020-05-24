@@ -57,7 +57,13 @@ const async = require('async');
 const md5 = require('md5');
 const message = md5('123456');
 console.log(message);
-// console.log(new Date().getDate());
+
+// 时间
+const sillyTime = require('silly-datetime'); // 时间格式化
+const dateNow = sillyTime(new Date(), 'YYYY-MM-DD 00:00:00');
 const time = (new Date()).getTime() - 24 * 60 * 60 * 1000;
 const yesterday = new Date(time);
-console.log(yesterday);
+const dateYes = sillyTime.format(yesterday, 'YYYY-MM-DD 00:00:00');
+// console.log('昨天日期' + new Date(dateYes), yesterday);
+
+console.log(dateNow);
