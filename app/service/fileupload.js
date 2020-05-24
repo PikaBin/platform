@@ -28,7 +28,7 @@ class UploadSingle extends Controller {
     // 返回图片保存的路径
     const uploadDir = path.join(this.config.upload, time + path.extname(filename));
     return {
-      saveDir: uploadDir.slice(3).replace(/\\/g, '/'), // 从0开始选取，将\\ 替换为 \
+      saveDir: uploadDir.slice(3).replace(/\\/g, '/'), // 从3开始选取，将\\ 替换为 \
       uploadDir,
     };
   }

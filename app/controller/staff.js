@@ -81,7 +81,7 @@ class StaffController extends Controller {
 
 
     this.ctx.body = {
-      url: target,
+      url: dir.saveDir,
     };
 
   }
