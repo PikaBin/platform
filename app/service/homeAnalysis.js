@@ -336,7 +336,7 @@ class HomeAnalysis extends Service {
     };
   }
 
-  // 本年的成交量
+  // 本年的应收账款
   async profitOnYear() {
     const Cashflow = this.ctx.model.Cashflow;
     const result = await Cashflow.aggregate([
@@ -433,6 +433,40 @@ class HomeAnalysis extends Service {
     };
   }
 
+  // 本年应付款总额
+  async debtOnYear() {
+    const Cashflow = this.ctx.model.Cashflow;
+    const result = await Cashflow.aggregate([
+      {
+        $match: { state: { $in: [ "1", "0" ] } },
+      },
+      {
+        $group:
+            {
+              _id: { month: { $month: "$addTime" }, year: { $year: "$addTime" } },
+              debt: { $sum: { $subtract: [ "$userPayable", "$systemReceivable" ] } },
+            },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的销售额
+    const yearData = []; // 存储本年数据、
+    const year = result[0]._id.year; // 获取年份
+    console.log(year);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.year === year) {
+        yearData.push(result[i]);
+      }
+    }
+
+    return {
+      yearData,
+      result,
+    };
+  }
 
 }
 module.exports = HomeAnalysis;

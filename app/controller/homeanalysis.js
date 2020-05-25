@@ -36,12 +36,6 @@ class HomeAnalysis extends Controller {
     this.ctx.body = result;
   }
 
-  // 应付账款总额
-  async debtVolume() {
-    const result = await this.ctx.service.homeAnalysis.debtVolume();
-    this.ctx.body = result;
-  }
-
   // 成交量总额
   async orderVolume() {
     const result = await this.ctx.service.homeAnalysis.orderVolume();
@@ -66,15 +60,33 @@ class HomeAnalysis extends Controller {
     this.ctx.body = result;
   }
 
-  // 本月应付账款
+  // 本月应收账款
   async profitonMonth() {
     const result = await this.ctx.service.homeAnalysis.profitOnMonth();
     this.ctx.body = result;
   }
 
-  // 本年应付账款
+  // 本年应收账款
   async profitOnYear() {
     const result = await this.ctx.service.homeAnalysis.profitOnYear();
+    this.ctx.body = result;
+  }
+
+  // 应付账款总额
+  async debtVolume() {
+    const result = await this.ctx.service.homeAnalysis.debtVolume();
+    this.ctx.body = result;
+  }
+
+  // 应付账款 本月
+  async debtOnMonth() {
+    const result = await this.ctx.service.homeAnalysis.debtOnMonth();
+    this.ctx.body = result;
+  }
+
+  // 应付账款 本年
+  async debtOnYear() {
+    const result = await this.ctx.service.homeAnalysis.debtOnYear();
     this.ctx.body = result;
   }
 }

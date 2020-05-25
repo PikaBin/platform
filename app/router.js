@@ -89,9 +89,11 @@ module.exports = app => {
   // 应收账款
   router.get('/platform/profitvolume', controller.homeanalysis.profitVolume); // 总应收账款
   router.get('/platform/profitonmonth', controller.homeanalysis.profitonMonth); // 本月应收账款
-  router.get('/platform/profitonyear', controller.homeanalysis.profitOnYear); // 本年应付账款
+  router.get('/platform/profitonyear', controller.homeanalysis.profitOnYear); // 本年应收账款
 
   // 总应付账款
   router.get('/platform/debtvolume', controller.homeanalysis.debtVolume); // 总应付账款
+  router.get('/platform/debtonmonth', controller.homeanalysis.debtOnMonth); // 月应付账款
+  router.get('/platform/debtonyear', controller.homeanalysis.debtOnYear); // 年应付账款
 
 };
