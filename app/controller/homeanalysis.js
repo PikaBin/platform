@@ -35,6 +35,18 @@ class HomeAnalysis extends Controller {
     const result = await this.ctx.service.homeAnalysis.saleonMonth();
     this.ctx.body = result;
   }
+
+  // 本年的销售额数据
+  async orderOnyear() {
+    const result = await this.ctx.service.homeAnalysis.saleonYear();
+    this.ctx.body = result;
+  }
+
+  // 应收账款总额
+  async profitVolume() {
+    const result = await this.ctx.service.homeAnalysis.profitVolume();
+    this.ctx.body = result;
+  }
 }
 
 module.exports = HomeAnalysis;

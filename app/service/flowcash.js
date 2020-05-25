@@ -34,6 +34,8 @@ class CashService extends Service {
     }
 
   }
+
+
   // 订单顺利时进行的结算
   async calculateGood(goodOrders) {
 
@@ -48,28 +50,17 @@ class CashService extends Service {
       const goodworkorder = await Workorder.findOne({ orderID: goodorder._id }).limit(1); // 查出对应的工单
       const servicerContract = await Contract.findOne({ servicerID: goodworkorder.servicer }); // 接单专才的合约
       const operator_C = await operatorContract.findOne({ operatorID: goodworkorder.operatorID }); // 运营商合约
-      console.log(goodworkorder, goodworkorder.operatorID);
+      // console.log(goodworkorder, goodworkorder.operatorID);
       const servicerCash = goodorder.cost * servicerContract.shar; // 专才所得
-      console.log(goodorder.cost, servicerContract);
+      // console.log(goodorder.cost, servicerContract);
       const operatorCash = goodorder.cost * operator_C.shar; // 运营商所得
       const rest = goodorder.cost - servicerCash - operatorCash; // 平台所得
 
       // 进行最后的结算
-      const updateResult = await Cashflow.updateOne({ orderId: goodorder._id },
-        { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest });
-
-      if (updateResult.nModified === 0) {
-        return {
-          information: '计算成功',
-          status: '1',
-        };
-      }
-
-      // 计算失败
-      return {
-        information: '计算失败',
-        status: '0',
-      };
+      // eslint-disable-next-line no-unused-vars
+      const updateResult = await Cashflow.updateOne({ orderId: goodorder._id, state: '2' },
+        { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest, state: '1' });
+      // console.log('顺利完成', updateResult);
     }
   }
 
@@ -90,37 +81,36 @@ class CashService extends Service {
 
       // 找出扣除的分成
       const latestLog = await WorkorderLog.findOne({ workorderId: badworkorder._id }).sort({ _id: -1 }).limit(1);
-      console.log('最后的反馈', latestLog);
-      const task = await Task.findById(latestLog.taskId);
-      console.log('task是什么：', task);
-      const receiveable = task.receivable;
-      console.log('分成是什么', receiveable);
+      // console.log('最后的反馈', latestLog);
+
+      // 如果没有工单反馈，则是服务还没有开始客户就取消订单
+      let task;
+      let receiveable;
+      if (latestLog) {
+        task = await Task.findById(latestLog.taskId);
+        // console.log('task是什么：', task);
+        receiveable = task.receivable;
+        // console.log('分成是什么', receiveable);
+      } else {
+        receiveable = 0;
+      }
+
 
       // 计算三端所得
       const servicerContract = await Contract.findOne({ servicerID: badworkorder.servicer }); // 接单的专才合同
       const operator_C = await operatorContract.findOne({ operatorID: badworkorder.operatorID }); // 接单的运营商合同
-      const customer = receiveable * badorder.cost;
-      console.log('客户退款', customer);
+      const customer = (1 - receiveable) * badorder.cost;
+      // console.log('客户退款', customer);
       const servicerCash = receiveable * badorder.cost * servicerContract.shar; // 专才所得
       const operatorCash = receiveable * badorder.cost * operator_C.shar; // 运营商所得
       const rest = badorder.cost - servicerCash - operatorCash - customer; // 平台所得
 
       // 最后结算
-      const updateResult = await Cashflow.updateOne({ orderId: badorder._id },
-        { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest, refund: customer });
+      // eslint-disable-next-line no-unused-vars
+      const updateResult = await Cashflow.updateOne({ orderId: badorder._id, status: '2' },
+        { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest, refund: customer, state: '0' });
+      // console.log('意外中止结果：', updateResult);
 
-      if (updateResult.nModified === 0) {
-        return {
-          information: '计算成功',
-          status: '1',
-        };
-      }
-
-      // 计算失败
-      return {
-        information: '计算失败',
-        status: '0',
-      };
     }
   }
 
@@ -131,12 +121,12 @@ class CashService extends Service {
 
     // 订单顺利完成
     const goodOrders = await Order.find({ orderState: '5' });
-    console.log('顺利完成的订单：', goodOrders);
+    // console.log('顺利完成的订单：', goodOrders);
     const goodResult = await this.calculateGood(goodOrders);
 
     // 订单意外中止
     const badOrders = await Order.find({ orderState: '4' });
-    console.log('意外中止的订单：', badOrders);
+    // console.log('意外中止的订单：', badOrders);
     const badResult = await this.calculateBad(badOrders);
 
     // 测试

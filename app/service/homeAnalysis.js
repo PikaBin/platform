@@ -144,6 +144,39 @@ class HomeAnalysis extends Service {
       result,
     };
   }
+
+  // 本年的销售额
+  async saleonYear() {
+    const Order = this.ctx.model.Order;
+    const result = await Order.aggregate([
+      {
+        $group:
+          {
+            _id: { month: { $month: "$orderTime" }, year: { $year: "$orderTime" } },
+            totalAmount: { $sum: "$cost" },
+          },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的销售额
+    const yearData = []; // 存储本周数据、
+    const year = result[0]._id.year; // 获取本周是第几周
+    console.log(year);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.year === year) {
+        yearData.push(result[i]);
+      }
+    }
+
+    return {
+      yearData,
+      result,
+    };
+  }
+
   // 订单成交量总额
   async orderVolume() {
     const Order = this.ctx.model.Order;
@@ -187,6 +220,14 @@ class HomeAnalysis extends Service {
     };
 
   }
-}
 
+  // 应收账款
+  async profitVolume() {
+    const Cashflow = this.ctx.model.Cashflow;
+    const attr = "$systemReceivable";
+    const result = await this.Volume(Cashflow, attr);
+    return result;
+  }
+
+}
 module.exports = HomeAnalysis;
