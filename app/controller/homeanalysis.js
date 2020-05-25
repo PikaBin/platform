@@ -47,6 +47,12 @@ class HomeAnalysis extends Controller {
     const result = await this.ctx.service.homeAnalysis.profitVolume();
     this.ctx.body = result;
   }
+
+  // 应付账款总额
+  async debtVolume() {
+    const result = await this.ctx.service.homeAnalysis.debtVolume();
+    this.ctx.body = result;
+  }
 }
 
 module.exports = HomeAnalysis;

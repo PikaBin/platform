@@ -86,4 +86,8 @@ module.exports = app => {
 
   // 应收账款
   router.get('/platform/profitvolume', controller.homeanalysis.profitVolume); // 总应收账款
+
+
+  // 总应付账款
+  router.get('/platform/debtvolume', controller.homeanalysis.debtVolume); // 总应付账款
 };

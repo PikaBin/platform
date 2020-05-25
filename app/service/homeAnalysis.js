@@ -221,7 +221,7 @@ class HomeAnalysis extends Service {
 
   }
 
-  // 应收账款
+  // 应收账款总额
   async profitVolume() {
     const Cashflow = this.ctx.model.Cashflow;
     const attr = "$systemReceivable";
@@ -229,5 +229,22 @@ class HomeAnalysis extends Service {
     return result;
   }
 
+  // 本月应付账款总额
+  async debtVolume() {
+    const Cashflow = this.ctx.model.Cashflow;
+    const total = await Cashflow.aggregate([
+      {
+        $match: { state: { $in: [ "1", "0" ] } },
+      },
+      {
+        $group: {
+          // _id: { day: { $dayOfMonth: "$addTime" } },
+          _id: null,
+          debt: { $sum: { $subtract: [ "$userPayable", "$systemReceivable" ] } },
+        },
+      },
+    ]);
+    return total;
+  }
 }
 module.exports = HomeAnalysis;
