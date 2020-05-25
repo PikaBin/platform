@@ -221,6 +221,70 @@ class HomeAnalysis extends Service {
 
   }
 
+  // 本月的成交量
+  async orderonMonth() {
+    const Order = this.ctx.model.Order;
+    const result = await Order.aggregate([
+      {
+        $group:
+            {
+              _id: { month: { $month: "$orderTime" }, dayOfMonth: { $dayOfMonth: "$orderTime" } },
+              count: { $sum: 1 },
+            },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的成交量
+    const monthData = []; // 存储本月数据
+    const month = result[0]._id.month; // 获取本月是第几月
+    console.log(month);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.month === month) {
+        monthData.push(result[i]);
+      }
+    }
+
+    return {
+      monthData,
+      result,
+    };
+  }
+
+  // 本年的成交量
+  async countOnYear() {
+    const Order = this.ctx.model.Order;
+    const result = await Order.aggregate([
+      {
+        $group:
+          {
+            _id: { month: { $month: "$orderTime" }, year: { $year: "$orderTime" } },
+            count: { $sum: 1 },
+          },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的销售额
+    const yearData = []; // 存储本周数据、
+    const year = result[0]._id.year; // 获取本周是第几周
+    console.log(year);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.year === year) {
+        yearData.push(result[i]);
+      }
+    }
+
+    return {
+      yearData,
+      result,
+    };
+  }
+
   // 应收账款总额
   async profitVolume() {
     const Cashflow = this.ctx.model.Cashflow;
@@ -229,7 +293,82 @@ class HomeAnalysis extends Service {
     return result;
   }
 
-  // 本月应付账款总额
+  // 本月应收账款
+  async profitOnMonth() {
+    const Cashflow = this.ctx.model.Cashflow;
+    const result = await Cashflow.aggregate([
+      {
+        $group:
+          {
+            _id: { month: { $month: "$addTime" }, dayOfMonth: { $dayOfMonth: "$addTime" } },
+            profit: { $sum: "$systemReceivable" },
+          },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的应收账款
+    const monthData = []; // 存储本月数据
+    const month = result[0]._id.month; // 获取本月是第几月
+    console.log(month);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.month === month) {
+        monthData.push(result[i]);
+      }
+    }
+
+    // 计算日比
+    // 今天的成单量
+    const today = result[0].profit;
+    // console.log(today);
+
+    // 昨日的成单量
+    const yesterday = result[1].profit;
+
+    // 日比增长率
+    const ratio = (today - yesterday) / yesterday * 100;
+
+    return {
+      simpleRatio: ratio.toFixed(2),
+      monthData,
+    };
+  }
+
+  // 本年的成交量
+  async profitOnYear() {
+    const Cashflow = this.ctx.model.Cashflow;
+    const result = await Cashflow.aggregate([
+      {
+        $group:
+            {
+              _id: { month: { $month: "$addTime" }, year: { $year: "$addTime" } },
+              count: { $sum: "$systemReceivable" },
+            },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的销售额
+    const yearData = []; // 存储本年数据、
+    const year = result[0]._id.year; // 获取年份
+    console.log(year);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.year === year) {
+        yearData.push(result[i]);
+      }
+    }
+
+    return {
+      yearData,
+      result,
+    };
+  }
+
+  // 应付账款总额
   async debtVolume() {
     const Cashflow = this.ctx.model.Cashflow;
     const total = await Cashflow.aggregate([
@@ -246,5 +385,54 @@ class HomeAnalysis extends Service {
     ]);
     return total;
   }
+
+  // 本月的应付款总额
+  async debtOnMonth() {
+
+    const Cashflow = this.ctx.model.Cashflow;
+    const result = await Cashflow.aggregate([
+      {
+        $match: { state: { $in: [ "1", "0" ] } },
+      },
+      {
+        $group:
+            {
+              _id: { month: { $month: "$addTime" }, dayOfMonth: { $dayOfMonth: "$addTime" } },
+              debt: { $sum: { $subtract: [ "$userPayable", "$systemReceivable" ] } },
+            },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的应收账款
+    const monthData = []; // 存储本月数据
+    const month = result[0]._id.month; // 获取本月是第几月
+    console.log(month);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.month === month) {
+        monthData.push(result[i]);
+      }
+    }
+
+    // 计算日比
+    // 今天的成单量
+    const today = result[0].debt;
+    // console.log(today);
+
+    // 昨日的成单量
+    const yesterday = result[1].debt;
+
+    // 日比增长率
+    const ratio = (today - yesterday) / yesterday * 100;
+
+    return {
+      simpleRatio: ratio.toFixed(2),
+      monthData,
+    };
+  }
+
+
 }
 module.exports = HomeAnalysis;

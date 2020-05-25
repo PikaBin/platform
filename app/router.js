@@ -77,17 +77,21 @@ module.exports = app => {
   // 首页 销售额
   router.get('/platform/totalamout', controller.homeanalysis.totalAmount); // 首页销售额
   router.get('/platform/saleonday', controller.homeanalysis.onDay); // 计算销售额日增长比
-  router.get('/platform/orderonmonth', controller.homeanalysis.orderOnmonth); // 计算本月数据
-  router.get('/platform/orderonyear', controller.homeanalysis.orderOnyear); // 本年数据
+  router.get('/platform/saleonmonth', controller.homeanalysis.orderOnmonth); // 计算本月数据
+  router.get('/platform/saleronyear', controller.homeanalysis.orderOnyear); // 本年数据
 
   // 成交总额
   router.get('/platform/ordervolume', controller.homeanalysis.orderVolume); // 成交总额
   router.get('/platform/orderonday', controller.homeanalysis.orderOnday); // 每日成交量以及增长比
+  router.get('/platform/orderonmonth', controller.homeanalysis.orderOnMonth); // 本月成交量
+  router.get('/platform/countonyear', controller.homeanalysis.countOnYear); // 本年的成交量
 
   // 应收账款
   router.get('/platform/profitvolume', controller.homeanalysis.profitVolume); // 总应收账款
-
+  router.get('/platform/profitonmonth', controller.homeanalysis.profitonMonth); // 本月应收账款
+  router.get('/platform/profitonyear', controller.homeanalysis.profitOnYear); // 本年应付账款
 
   // 总应付账款
   router.get('/platform/debtvolume', controller.homeanalysis.debtVolume); // 总应付账款
+
 };
