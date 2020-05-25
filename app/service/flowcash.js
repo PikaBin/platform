@@ -90,20 +90,24 @@ class CashService extends Service {
 
       // 找出扣除的分成
       const latestLog = await WorkorderLog.findOne({ workorderId: badworkorder._id }).sort({ _id: -1 }).limit(1);
-      const task = Task.findById(latestLog.taskId);
+      console.log('最后的反馈', latestLog);
+      const task = await Task.findById(latestLog.taskId);
+      console.log('task是什么：', task);
       const receiveable = task.receivable;
+      console.log('分成是什么', receiveable);
 
       // 计算三端所得
       const servicerContract = await Contract.findOne({ servicerID: badworkorder.servicer }); // 接单的专才合同
       const operator_C = await operatorContract.findOne({ operatorID: badworkorder.operatorID }); // 接单的运营商合同
-      const refund = receiveable * badOrders.cost;
+      const customer = receiveable * badorder.cost;
+      console.log('客户退款', customer);
       const servicerCash = receiveable * badorder.cost * servicerContract.shar; // 专才所得
       const operatorCash = receiveable * badorder.cost * operator_C.shar; // 运营商所得
-      const rest = badorder.cost - servicerCash - operatorCash - refund; // 平台所得
+      const rest = badorder.cost - servicerCash - operatorCash - customer; // 平台所得
 
       // 最后结算
       const updateResult = await Cashflow.updateOne({ orderId: badorder._id },
-        { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest, refund });
+        { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest, refund: customer });
 
       if (updateResult.nModified === 0) {
         return {
@@ -141,7 +145,6 @@ class CashService extends Service {
       goodResult,
       badResult,
     };
-
 
   }
 

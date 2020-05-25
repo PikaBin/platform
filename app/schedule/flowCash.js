@@ -6,14 +6,14 @@ const Subscription = require('egg').Subscription;
 class FlowCash extends Subscription {
   static get schedule() {
     return {
-      interval: '10s',
+      interval: '20s',
       type: 'all',
     };
   }
 
   async subscribe() {
 
-    // await this.ctx.service.flowcash.calculate();
+    await this.ctx.service.flowcash.calculate();
     // console.log(1);
   }
 }
