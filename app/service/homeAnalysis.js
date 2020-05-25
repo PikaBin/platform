@@ -40,6 +40,35 @@ class HomeAnalysis extends Service {
     }
   }
 
+  // 获取某一指标的每日数量以及日增长比
+  async onDay(target, attr, time) {
+    // const Order = this.ctx.model.Order;
+    const result = await target.aggregate([
+      {
+        $group:
+          {
+            _id: { day: { $dayOfYear: time } },
+            totalAmount: { $sum: attr },
+          },
+      },
+    ]);
+
+    // 今天的数据
+    const today = result[0].totalAmount;
+    // console.log(today);
+
+    // 昨日的数据
+    const yesterday = result[1].totalAmount;
+
+    // 日比增长率
+    const ratio = (today - yesterday) / yesterday * 100;
+
+    return {
+      simpleRatio: ratio.toFixed(2),
+      result,
+    };
+  }
+
   // 首页的总销售额
   async salesVolume() {
     const Order = this.ctx.model.Order;
@@ -48,18 +77,6 @@ class HomeAnalysis extends Service {
     return result;
   }
 
-  // 订单成交量总额
-  async orderVolume() {
-    const Order = this.ctx.model.Order;
-    const result = await Order.aggregate([{
-      $group: {
-        _id: null,
-        count: { $sum: 1 },
-      },
-    }]);
-
-    return result;
-  }
 
   /**
    * 销售额日同比,每日销售额
@@ -75,11 +92,11 @@ class HomeAnalysis extends Service {
             totalAmount: { $sum: "$cost" },
           },
       },
+      {
+        $sort: { week: -1 },
+      },
     ]);
-    // const salesVolume = await this.salesVolume();
-    // console.log(salesVolume);
-    // const totalAmount = salesVolume.result[0].totalAmount;
-    // console.log(totalAmount);
+
     // 今天的销售额
     const today = result[0].totalAmount;
     // console.log(today);
@@ -95,6 +112,51 @@ class HomeAnalysis extends Service {
       result,
     };
   }
+
+  // 本月的销售额
+  async saleonMonth() {
+    const Order = this.ctx.model.Order;
+    const result = await Order.aggregate([
+      {
+        $group:
+          {
+            _id: { month: { $month: "$orderTime" }, dayOfMonth: { $dayOfMonth: "$orderTime" } },
+            totalAmount: { $sum: "$cost" },
+          },
+      },
+      {
+        $sort: { _id: -1 },
+      },
+    ]);
+
+    // 本月的销售额
+    const monthData = []; // 存储本周数据、
+    const month = result[0]._id.month; // 获取本周是第几周
+    console.log(month);
+    for (let i = 0; i < result.length; i++) {
+      if (result[i]._id.month === month) {
+        monthData.push(result[i]);
+      }
+    }
+
+    return {
+      monthData,
+      result,
+    };
+  }
+  // 订单成交量总额
+  async orderVolume() {
+    const Order = this.ctx.model.Order;
+    const result = await Order.aggregate([{
+      $group: {
+        _id: null,
+        count: { $sum: 1 },
+      },
+    }]);
+
+    return result;
+  }
+
 
   // 每日成单量 以及增长率
   async orderOnday() {

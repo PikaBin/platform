@@ -13,7 +13,7 @@ class FlowCash extends Subscription {
 
   async subscribe() {
 
-    await this.ctx.service.flowcash.calculate();
+    // await this.ctx.service.flowcash.calculate();
     // console.log(1);
   }
 }

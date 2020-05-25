@@ -30,7 +30,7 @@ class OperatorInfoController extends Controller {
 
   }
   /**
-   * 更新运营商基础信息并返回更新后的信息
+   * 平台修改运营商基础信息并返回更新后的信息
    */
   async updateOperator() {
     // 获取前端数据

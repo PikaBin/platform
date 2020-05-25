@@ -77,6 +77,7 @@ module.exports = app => {
   // 首页 销售额
   router.get('/platform/totalamout', controller.homeanalysis.totalAmount); // 首页销售额
   router.get('/platform/saleonday', controller.homeanalysis.onDay); // 计算销售额日增长比
+  router.get('/platform/orderonmonth', controller.homeanalysis.orderOnmonth); // 计算本月数据
 
 
   router.get('/platform/ordervolume', controller.homeanalysis.orderVolume); // 成交总额

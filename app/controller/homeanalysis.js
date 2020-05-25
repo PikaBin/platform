@@ -29,6 +29,12 @@ class HomeAnalysis extends Controller {
     const result = await this.ctx.service.homeAnalysis.orderOnday();
     this.ctx.body = result;
   }
+
+  // 本周销售额数据
+  async orderOnmonth() {
+    const result = await this.ctx.service.homeAnalysis.saleonMonth();
+    this.ctx.body = result;
+  }
 }
 
 module.exports = HomeAnalysis;

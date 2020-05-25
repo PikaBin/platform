@@ -98,7 +98,7 @@ class WorkorderService extends Service {
     const Order = this.ctx.model.Order;
     const Partition = this.ctx.model.Partition;
     // const Category = this.ctx.model.Category;
-    const Operator = this.ctx.model.Operator;
+    // const Operator = this.ctx.model.Operator;
     const Workorder = this.ctx.model.Workorder;
     const CashFlow = this.ctx.model.Cashflow;
 
