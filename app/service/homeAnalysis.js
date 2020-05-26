@@ -452,7 +452,6 @@ class HomeAnalysis extends Service {
       },
     ]);
 
-    // 本月的销售额
     const yearData = []; // 存储本年数据、
     const year = result[0]._id.year; // 获取年份
     console.log(year);
@@ -468,5 +467,32 @@ class HomeAnalysis extends Service {
     };
   }
 
+  // 计算运营商排行榜
+  async operatorRank() {
+    // const Workorder = this.ctx.model.Workorder;
+    const Order = this.ctx.model.Order;
+    const rank = await Order.aggregate([
+      {
+        $lookup: {
+          from: 'workorders',
+          localField: '_id',
+          foreignField: 'orderID',
+          as: 'workorder',
+        },
+      },
+      {
+        $group: {
+          _id: { operator: "$workorder.operatorID" },
+          saleAmount: { $sum: "$cost" },
+        },
+      },
+      {
+        $sort: { saleAmount: -1 },
+      },
+    ]);
+
+    console.log(rank);
+    return rank;
+  }
 }
 module.exports = HomeAnalysis;

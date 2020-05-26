@@ -49,7 +49,8 @@ module.exports = appInfo => {
   // 解决跨域
   exports.security = {
     domainWhiteList: [ 'http://localhost:8000', 'http://localhost:3000', 'http://localhost:8001', 'http://localhost:7002',
-      'http://47.103.1.149:3001', 'http://47.103.1.149:5000', 'http://47.103.1.149:5001', 'http://111.231.135.169:5000', 'http://111.231.135.169:5001' ],
+      'http://47.103.1.149:3001', 'http://47.103.1.149:5000', 'http://47.103.1.149:5001', 'http://111.231.135.169:5000', 'http://111.231.135.169:5001',
+      'http://111.231.135.169:38738' ],
     csrf: {
       ignore: '/platform',
       enable: false,

@@ -96,4 +96,7 @@ module.exports = app => {
   router.get('/platform/debtonmonth', controller.homeanalysis.debtOnMonth); // 月应付账款
   router.get('/platform/debtonyear', controller.homeanalysis.debtOnYear); // 年应付账款
 
+  // 运营商排行榜
+  router.get('/platform/operatorrank', controller.homeanalysis.operatorRank); // 运营商排行榜
+
 };

@@ -89,6 +89,12 @@ class HomeAnalysis extends Controller {
     const result = await this.ctx.service.homeAnalysis.debtOnYear();
     this.ctx.body = result;
   }
+
+  // 运营商排行榜
+  async operatorRank() {
+    const result = await this.ctx.service.homeAnalysis.operatorRank();
+    this.ctx.body = result;
+  }
 }
 
 module.exports = HomeAnalysis;
