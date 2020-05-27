@@ -99,4 +99,8 @@ module.exports = app => {
   // 运营商排行榜
   router.get('/platform/operatorrank', controller.homeanalysis.operatorRank); // 运营商排行榜
 
+  // 订单分析
+  router.get('/platform/badorder', controller.homeanalysis.badorder); // 意外中止订单总数
+  router.get('/platform/badorderonmonth', controller.homeanalysis.badorderOnMonth); // 意外中止订单 每月
+  router.get('/platform/goodorderonmonth', controller.homeanalysis.goodorderOnMonth); // 顺利完成订单，每月
 };

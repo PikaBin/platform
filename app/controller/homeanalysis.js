@@ -95,6 +95,47 @@ class HomeAnalysis extends Controller {
     const result = await this.ctx.service.homeAnalysis.operatorRank();
     this.ctx.body = result;
   }
+  // 订单总量
+  // async totalorder() {
+  //   const result = await this.ctx.service.orderAnalysis.totalorder();
+  //   this.ctx.body = result;
+  // }
+
+  // 每月订单
+  // async ordersOnMonth() {
+  //   const result = await this.ctx.service.orderAnalysis.orderOnMonth();
+  //   this.ctx.body = result;
+  // }
+
+  // 本年订单
+  // async orderOnYear() {
+  //   const result = await this.ctx.service.orderAnalysis.orderOnYear();
+  //   this.ctx.body = result;
+  // }
+
+  // 意外中止订单总数
+  async badorder() {
+    const result = await this.ctx.service.orderAnalysis.badorder();
+    this.ctx.body = result;
+  }
+
+  // 意外中止 每月
+  async badorderOnMonth() {
+    const result = await this.ctx.service.orderAnalysis.badorderOnMonth();
+    this.ctx.body = result;
+  }
+
+  // 顺利完成
+  async goodorderOnMonth() {
+    const result = await this.ctx.service.orderAnalysis.goodorderOnMonth();
+    this.ctx.body = result;
+  }
+
+  // 单品排行榜
+  async partitionRank() {
+    const result = await this.ctx.service.orderAnalysis.partitionRank();
+    this.ctx.body = result;
+  }
 }
 
 module.exports = HomeAnalysis;
