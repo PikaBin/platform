@@ -85,6 +85,12 @@ class StaffController extends Controller {
     };
 
   }
+
+  // 修改密码
+  async changepsd() {
+    const result = await this.ctx.service.staff.changePassword();
+    this.ctx.body = result;
+  }
 }
 
 module.exports = StaffController;

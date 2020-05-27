@@ -111,6 +111,45 @@ class orderAnalysis extends Service {
     };
   }
 
+
+  // 意外中止，每年
+  async badorderOnYear() {
+    const Order = this.ctx.model.Order;
+
+    const number = await Order.aggregate([
+      {
+        $match: { orderState: '4' },
+      },
+      {
+        $group: {
+          _id: { month: { $month: "$orderTime" } },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+
+    return {
+      number,
+    };
+  }
+  // 顺利完成 总数
+  async goodorder() {
+    const Order = this.ctx.model.Order;
+
+    const goodnumber = await Order.aggregate([
+      {
+        $match: { orderState: '5' },
+      },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    return goodnumber;
+  }
   // 顺利完成，每月
   async goodorderOnMonth() {
     const Order = this.ctx.model.Order;
@@ -135,6 +174,27 @@ class orderAnalysis extends Service {
     return {
       simpleRatio: ratio.toFixed(2),
       today,
+      number,
+    };
+  }
+
+  // 顺利完成，每年
+  async goodorderOnYear() {
+    const Order = this.ctx.model.Order;
+
+    const number = await Order.aggregate([
+      {
+        $match: { orderState: '5' },
+      },
+      {
+        $group: {
+          _id: { month: { $month: "$orderTime" } },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    return {
       number,
     };
   }

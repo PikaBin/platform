@@ -56,6 +56,46 @@ class StaffService extends Service {
     }
   }
 
+  // 修改密码
+  async changePassword() {
+    const data = await this.ctx.request.body;
+    const Staff = this.ctx.model.Staff;
+    const Operator = this.ctx.model.Operator;
+    const character = await this.ctx.query.character;
+    const id = await this.ctx.query._id;
+    data.password = await this.ctx.service.tools.md5(data.password);
+    const idO = await this.ctx.service.tools.getObjectId(id);
+    // console.log(idO);
+
+    // 判断什么角色
+    if (character === 'o') {
+      const update = await Operator.findByIdAndUpdate(idO, data);
+      console.log('运营商：', update);
+      if (update) {
+        return {
+          status: '1',
+          information: '修改密码成功',
+        };
+      }
+      return {
+        status: '0',
+        information: '修改失败',
+      };
+    }
+
+    const update = await Staff.findByIdAndUpdate(idO, data);
+    console.log('平台员工：', update);
+    if (update.nModified !== 0) {
+      return {
+        status: '1',
+        information: '修改密码成功',
+      };
+    }
+
+    return '修改失败';
+  }
+
+
 }
 
 module.exports = StaffService;

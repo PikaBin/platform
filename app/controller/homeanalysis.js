@@ -125,9 +125,26 @@ class HomeAnalysis extends Controller {
     this.ctx.body = result;
   }
 
-  // 顺利完成
+  // 意外中止 本年
+  async badorderOnYear() {
+    const result = await this.ctx.service.orderAnalysis.badorderOnYear();
+    this.ctx.body = result;
+  }
+
+  // 顺利完成 总数
+  async goodorder() {
+    const result = await this.ctx.service.orderAnalysis.goodorder();
+    this.ctx.body = result;
+  }
+  // 顺利完成 每月
   async goodorderOnMonth() {
     const result = await this.ctx.service.orderAnalysis.goodorderOnMonth();
+    this.ctx.body = result;
+  }
+
+  // 顺利完成 每年
+  async goodorderOnYear() {
+    const result = await this.ctx.service.orderAnalysis.goodorderOnYear();
     this.ctx.body = result;
   }
 

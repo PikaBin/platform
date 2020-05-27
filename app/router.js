@@ -20,6 +20,7 @@ module.exports = app => {
   router.get('/platform/querystaff', controller.staff.queryStaff); // 查询平台员工
   router.post('/platform/updatestaff', controller.staff.updateStaff); // 修改平台员工信息
   router.post('/platform/addphoto', controller.staff.addPhoto); // 修改员工头像
+  router.post('/platform/changepsd', controller.staff.changepsd); // 修改密码
 
 
   /**
@@ -102,5 +103,8 @@ module.exports = app => {
   // 订单分析
   router.get('/platform/badorder', controller.homeanalysis.badorder); // 意外中止订单总数
   router.get('/platform/badorderonmonth', controller.homeanalysis.badorderOnMonth); // 意外中止订单 每月
+  router.get('/platform/badorderonyear', controller.homeanalysis.badorderOnYear); // 意外中止订单 每年
+  router.get('/platform/goodorder', controller.homeanalysis.goodorder); // 顺利完成 总数
   router.get('/platform/goodorderonmonth', controller.homeanalysis.goodorderOnMonth); // 顺利完成订单，每月
+  router.get('/platform/goodorderonyear', controller.homeanalysis.goodorderOnYear); // 顺利完成 每年
 };
