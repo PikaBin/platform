@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable object-shorthand */
 /* eslint-disable jsdoc/require-param */
 /**
@@ -142,7 +143,7 @@ class WorkorderService extends Service {
           // 完善现金流量表内容（工单id）
           // console.log(order._id);
           const workorderTocash = await CashFlow.updateOne({ orderId: order._id }, { workOrderId: workorderInstance._id, addTime: new Date() });
-          console.log('添加了吗：' + JSON.stringify(workorderTocash));
+          // console.log('添加了吗：' + JSON.stringify(workorderTocash));
         }
 
         return workorders;

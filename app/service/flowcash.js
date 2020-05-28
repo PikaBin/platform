@@ -90,9 +90,10 @@ class CashService extends Service {
         task = await Task.findById(latestLog.taskId);
         // console.log('task是什么：', task);
         receiveable = task.receivable;
-        // console.log('分成是什么', receiveable);
+        console.log('分成是什么', receiveable);
       } else {
         receiveable = 0;
+        console.log('分成是什么', receiveable);
       }
 
 
@@ -100,14 +101,13 @@ class CashService extends Service {
       const servicerContract = await Contract.findOne({ servicerID: badworkorder.servicer }); // 接单的专才合同
       const operator_C = await operatorContract.findOne({ operatorID: badworkorder.operatorID }); // 接单的运营商合同
       const customer = (1 - receiveable) * badorder.cost;
-      // console.log('客户退款', customer);
       const servicerCash = receiveable * badorder.cost * servicerContract.shar; // 专才所得
       const operatorCash = receiveable * badorder.cost * operator_C.shar; // 运营商所得
       const rest = badorder.cost - servicerCash - operatorCash - customer; // 平台所得
 
       // 最后结算
       // eslint-disable-next-line no-unused-vars
-      const updateResult = await Cashflow.updateOne({ orderId: badorder._id, status: '2' },
+      const updateResult = await Cashflow.updateOne({ orderId: badorder._id, state: '2' },
         { serverReceivable: servicerCash, operatorReceivable: operatorCash, systemReceivable: rest, refund: customer, state: '0' });
       // console.log('意外中止结果：', updateResult);
 
