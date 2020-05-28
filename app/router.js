@@ -107,4 +107,5 @@ module.exports = app => {
   router.get('/platform/goodorder', controller.homeanalysis.goodorder); // 顺利完成 总数
   router.get('/platform/goodorderonmonth', controller.homeanalysis.goodorderOnMonth); // 顺利完成订单，每月
   router.get('/platform/goodorderonyear', controller.homeanalysis.goodorderOnYear); // 顺利完成 每年
+  router.get('/platform/partitionrank', controller.homeanalysis.partitionRank); // 单品分区排行
 };

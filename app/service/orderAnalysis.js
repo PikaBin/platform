@@ -201,7 +201,7 @@ class orderAnalysis extends Service {
 
   // 单品排行榜
   async partitionRank() {
-    const Order = this.ctx.model.Order.Order;
+    const Order = this.ctx.model.Order;
 
     const partitionRank = await Order.aggregate([
 
