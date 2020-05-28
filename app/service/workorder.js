@@ -123,7 +123,7 @@ class WorkorderService extends Service {
 
           // 创建对应的工单
           const workorderInstance = await Workorder.create({
-            name: order.orderId,
+            name: partition.name + '--' + order.orderId,
             itemPartition: order.partitionId,
             orderID: order._id,
             operatorID: partition.itemID.operatorID,
