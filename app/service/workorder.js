@@ -128,7 +128,7 @@ class WorkorderService extends Service {
             orderID: order._id,
             operatorID: partition.itemID.operatorID,
             state: '2', // 由于是新生成的工单，所以工单状态默认为2(待分配)
-            startTime: new Date(), // 此处有坑，mongodb数据库存入的时间会自动转化为零时区的时间，但是前端显示会自动转为本地时间
+            startTime: order.orderTime, // 此处有坑，mongodb数据库存入的时间会自动转化为零时区的时间，但是前端显示会自动转为本地时间
             requirement: order.remark,
             customerPhone: order.phone,
           });
